@@ -45,10 +45,11 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         String title;
         if(position == 0) {
-            title = "Location List";
-        } else{
             title = "Weather Forecast";
+        } else{
+            title = "Location List";
         }
         return title;
     }
+
 }

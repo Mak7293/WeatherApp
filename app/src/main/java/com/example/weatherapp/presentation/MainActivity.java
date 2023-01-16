@@ -32,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
     }
     private void setupViewPager(ViewPager viewPager){
         List<Fragment> fragmentList = new ArrayList<Fragment>();
-        fragmentList.add(new LocationListFragment());
         fragmentList.add(new WeatherFragment());
+        fragmentList.add(new LocationListFragment());
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(fragmentList, getSupportFragmentManager());
         viewPager.setAdapter(adapter);

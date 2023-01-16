@@ -8,6 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="tab_inactive_text_color">#636363</color>
+
     <!--myColorPallet1-->
     <color name="dark_green_0">#081c15</color>
     <color name="dark_green_1">#1b4332</color>
