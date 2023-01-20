@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 
@@ -25,6 +26,7 @@ import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.observers.DisposableObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -42,7 +44,7 @@ public class DefaultLocationTracker implements LocationTracker {
     }
 
     @Override
-    public Location getCurrentLocation() throws InterruptedException {
+    public @Nullable Location getCurrentLocation() {
         boolean hasAccessFineLocationPermission = ContextCompat.checkSelfPermission(
                 applicationContext,
                 ACCESS_FINE_LOCATION
@@ -62,11 +64,11 @@ public class DefaultLocationTracker implements LocationTracker {
         }
 
         final Location[] location = new Location[1];
+        CompositeDisposable compositeDisposable = new CompositeDisposable();
         @SuppressLint("MissingPermission")
         Observable<Task<Location>> locationObservable =
                 Observable.just(locationClient.getLastLocation());
-        Observer<Task<Location>> locationObserver = new DisposableObserver<Task<Location>>(){
-
+        DisposableObserver<Task<Location>> locationObserver = new DisposableObserver<Task<Location>>(){
             @Override
             public void onNext(@NonNull Task<Location> locationTask) {
                 if (locationTask.isComplete()){
@@ -94,12 +96,19 @@ public class DefaultLocationTracker implements LocationTracker {
             }
 
         };
-        locationObservable
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(locationObserver);
-
-        wait();
-        return location[0];
+        compositeDisposable.add(
+                locationObservable
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribeWith(locationObserver)
+        );
+        try {
+            wait();
+            compositeDisposable.dispose();
+            return location[0];
+        } catch (InterruptedException e) {
+            compositeDisposable.dispose();
+            return null;
+        }
     }
 }

@@ -2,7 +2,9 @@ package com.example.weatherapp.domin.location;
 
 import android.location.Location;
 
+import androidx.annotation.Nullable;
+
 public interface LocationTracker {
 
-    abstract Location getCurrentLocation() throws InterruptedException;
+    abstract @Nullable Location getCurrentLocation();
 }

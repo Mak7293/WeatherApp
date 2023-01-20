@@ -13,7 +13,7 @@ import java.util.List;
 
 public class WeatherMappers {
 
-    HashMap<Integer, List<WeatherData>> WeatherDataDtoToWeatherDataMap(WeatherDataDto weatherDataDto){
+    static public HashMap<Integer, List<WeatherData>> weatherDataDtoToWeatherDataMap(WeatherDataDto weatherDataDto){
         HashMap<Integer, List<WeatherData>> week = new HashMap<>();
         List<WeatherData> day = new ArrayList<>();
         int i = 0;
@@ -45,9 +45,9 @@ public class WeatherMappers {
 
     }
 
-    WeatherInfo WeatherDtoToWeatherInfo(WeatherDto weatherDto) {
+    static public WeatherInfo weatherDtoToWeatherInfo(WeatherDto weatherDto) {
         HashMap<Integer, List<WeatherData>> weatherDataMap =
-                WeatherDataDtoToWeatherDataMap(weatherDto.hourly);
+                weatherDataDtoToWeatherDataMap(weatherDto.hourly);
         List<WeatherData> currentWeatherDataList = weatherDataMap.get(0);
         LocalDateTime now = LocalDateTime.now();
         int hour;
