@@ -6,11 +6,11 @@ import com.example.weatherapp.domin.weather.WeatherInfo;
 
 public class WeatherState {
     @Nullable
-    WeatherInfo weatherInfo;
+    public WeatherInfo weatherInfo;
     @Nullable
-    Boolean isLoading;
+    public Boolean isLoading;
     @Nullable
-    String error;
+    public String error;
     public WeatherState(
             @Nullable WeatherInfo weatherInfo,
             @Nullable Boolean isLoading,

@@ -8,14 +8,14 @@ public class WeatherData {
     public double pressure;
     public double windSpeed;
     public double humidity;
-    public double weatherType;
+    public WeatherType weatherType;
     public WeatherData(
             LocalDateTime time,
             double temperatureCelsius,
             double pressure,
             double windSpeed,
             double humidity,
-            double weatherType
+            WeatherType weatherType
     ){
         this.time = time;
         this.temperatureCelsius = temperatureCelsius;

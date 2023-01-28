@@ -1,13 +1,17 @@
 package com.example.weatherapp.data.mappers;
 
+import android.util.Log;
+
 import com.example.weatherapp.data.remote.WeatherDataDto;
 import com.example.weatherapp.data.remote.WeatherDto;
 import com.example.weatherapp.domin.weather.WeatherData;
 import com.example.weatherapp.domin.weather.WeatherInfo;
+import com.example.weatherapp.domin.weather.WeatherType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,7 +22,7 @@ public class WeatherMappers {
         List<WeatherData> day = new ArrayList<>();
         int i = 0;
         int iDay = 0;
-        while(i <= weatherDataDto.time.size()){
+        while(i < weatherDataDto.time.size()){
             String time = weatherDataDto.time.get(i);
             double temperature = weatherDataDto.temperature_2m.get(i);
             int weatherCode = weatherDataDto.weathercode.get(i);
@@ -31,16 +35,17 @@ public class WeatherMappers {
                     pressure,
                     windSpeed,
                     humidity,
-                    weatherCode
+                    new WeatherType().fromWMO(weatherCode)
             );
             day.add(weatherData);
             if(((i+1)%24d) == 0 ){
                 week.put(iDay,day);
                 iDay++;
-                day.clear();
+                day = new ArrayList<>();
             }
             i++;
         }
+        Log.d("week0", week.toString());
         return week;
 
     }

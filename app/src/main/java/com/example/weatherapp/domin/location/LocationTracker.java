@@ -4,7 +4,9 @@ import android.location.Location;
 
 import androidx.annotation.Nullable;
 
+import java.util.HashMap;
+
 public interface LocationTracker {
 
-    abstract @Nullable Location getCurrentLocation();
+    abstract @Nullable HashMap<String,Double> getCurrentLocation() throws InterruptedException;
 }

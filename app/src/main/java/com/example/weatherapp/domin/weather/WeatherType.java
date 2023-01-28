@@ -5,9 +5,11 @@ import androidx.annotation.DrawableRes;
 import com.example.weatherapp.R;
 
 public class WeatherType {
-    String weatherDesc;
-    int iconRes;
-    
+    public String weatherDesc;
+    public int iconRes;
+    public WeatherType(){
+
+    }
     public WeatherType(
             String weatherDesc,
             @DrawableRes
@@ -16,115 +18,115 @@ public class WeatherType {
         this.weatherDesc = weatherDesc;
         this.iconRes = iconRes;
     }
-    WeatherType ClearSky = new WeatherType(
+    static WeatherType ClearSky = new WeatherType(
              "Clear sky",
               R.drawable.ic_clear_sky
     );
-    WeatherType MainlyClear = new WeatherType(
+    static WeatherType MainlyClear = new WeatherType(
              "Mainly clear",
               R.drawable.ic_partly_cloudly
     );
-    WeatherType PartlyCloudy = new WeatherType(
+    static WeatherType PartlyCloudy = new WeatherType(
              "Partly cloudy",
               R.drawable.ic_partly_cloudly
     );
-    WeatherType Overcast = new WeatherType(
+    static WeatherType Overcast = new WeatherType(
              "Overcast",
               R.drawable.ic_partly_cloudly
     );
-    WeatherType Foggy = new WeatherType(
+    static WeatherType Foggy = new WeatherType(
              "Foggy",
               R.drawable.ic_fog
     );
-    WeatherType DepositingRimeFog = new WeatherType(
+    static WeatherType DepositingRimeFog = new WeatherType(
              "Depositing rime fog",
               R.drawable.ic_very_cloudly
     );
-    WeatherType LightDrizzle = new WeatherType(
+    static WeatherType LightDrizzle = new WeatherType(
              "Light drizzle",
               R.drawable.ic_rain_shower
     );
-    WeatherType ModerateDrizzle = new WeatherType(
+    static WeatherType ModerateDrizzle = new WeatherType(
              "Moderate drizzle",
               R.drawable.ic_rain_shower
     );
-    WeatherType DenseDrizzle = new WeatherType(
+    static WeatherType DenseDrizzle = new WeatherType(
              "Dense drizzle",
               R.drawable.ic_rain_shower
     );
-    WeatherType LightFreezingDrizzle = new WeatherType(
+    static WeatherType LightFreezingDrizzle = new WeatherType(
              "Slight freezing drizzle",
               R.drawable.ic_rain
     );
-    WeatherType DenseFreezingDrizzle = new WeatherType(
+    static WeatherType DenseFreezingDrizzle = new WeatherType(
              "Dense freezing drizzle",
               R.drawable.ic_rain
     );
-    WeatherType SlightRain = new WeatherType(
+    static WeatherType SlightRain = new WeatherType(
              "Slight rain",
               R.drawable.ic_rain
     );
-    WeatherType ModerateRain = new WeatherType(
+    static WeatherType ModerateRain = new WeatherType(
              "Rainy",
               R.drawable.ic_rain
     );
-    WeatherType HeavyRain = new WeatherType(
+    static WeatherType HeavyRain = new WeatherType(
              "Heavy rain",
               R.drawable.ic_rain
     );
-    WeatherType HeavyFreezingRain = new WeatherType(
+    static WeatherType HeavyFreezingRain = new WeatherType(
              "Heavy freezing rain",
               R.drawable.ic_rain
     );
-    WeatherType SlightSnowFall = new WeatherType(
+    static WeatherType SlightSnowFall = new WeatherType(
              "Slight snow fall",
               R.drawable.ic_snow
     );
-    WeatherType ModerateSnowFall = new WeatherType(
+    static WeatherType ModerateSnowFall = new WeatherType(
              "Moderate snow fall",
               R.drawable.ic_snow
     );
-    WeatherType HeavySnowFall = new WeatherType(
+    static WeatherType HeavySnowFall = new WeatherType(
              "Heavy snow fall",
              R.drawable.ic_snow
     );
-    WeatherType SnowGrains = new WeatherType(
+    static WeatherType SnowGrains = new WeatherType(
              "Snow grains",
               R.drawable.ic_snow
     );
-    WeatherType SlightRainShowers = new WeatherType(
+    static WeatherType SlightRainShowers = new WeatherType(
              "Slight rain showers",
               R.drawable.ic_rain_shower
     );
-    WeatherType ModerateRainShowers = new WeatherType(
+    static WeatherType ModerateRainShowers = new WeatherType(
              "Moderate rain showers",
               R.drawable.ic_rain_shower
     );
-    WeatherType ViolentRainShowers = new WeatherType(
+    static WeatherType ViolentRainShowers = new WeatherType(
              "Violent rain showers",
               R.drawable.ic_rain_shower
     );
-    WeatherType SlightSnowShowers = new WeatherType(
+    static WeatherType SlightSnowShowers = new WeatherType(
              "Light snow showers",
               R.drawable.ic_snow
     );
-    WeatherType HeavySnowShowers = new WeatherType(
+    static WeatherType HeavySnowShowers = new WeatherType(
              "Heavy snow showers",
               R.drawable.ic_snow
     );
-    WeatherType ModerateThunderstorm = new WeatherType(
+    static WeatherType ModerateThunderstorm = new WeatherType(
              "Moderate thunderstorm",
               R.drawable.ic_thunder_storm
     );
-    WeatherType SlightHailThunderstorm = new WeatherType(
+    static WeatherType SlightHailThunderstorm = new WeatherType(
              "Thunderstorm with slight hail",
               R.drawable.ic_thunder_storm
     );
-    WeatherType HeavyHailThunderstorm = new WeatherType(
+    static WeatherType HeavyHailThunderstorm = new WeatherType(
              "Thunderstorm with heavy hail",
               R.drawable.ic_thunder_storm
     );
-    WeatherType fromWMO(int code) {
+    public WeatherType fromWMO(int code) {
         WeatherType state;
         switch (code) {
             case 0 : state = ClearSky; break;

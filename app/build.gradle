@@ -65,5 +65,7 @@ dependencies {
     implementation "io.reactivex.rxjava3:rxjava:3.1.5"
     //RxAndroid
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
+    //rx to liveData
+    implementation 'androidx.lifecycle:lifecycle-reactivestreams:2.5.1'
 
 }

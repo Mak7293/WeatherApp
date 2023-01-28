@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class WeatherInfo {
-    HashMap<Integer, List<WeatherData>> weatherDataPerDay;
+    public HashMap<Integer, List<WeatherData>> weatherDataPerDay;
     @Nullable
-    WeatherData currentWeatherData;
+    public WeatherData currentWeatherData;
     public WeatherInfo(
             HashMap<Integer, List<WeatherData>> weatherDataPerDay,
             @Nullable WeatherData currentWeatherData
