@@ -1,4 +1,4 @@
-package com.example.weatherapp.adapters;
+package com.example.weatherapp.domin.adapters;
 
 import android.widget.Switch;
 

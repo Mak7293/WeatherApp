@@ -11,13 +11,16 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 
 import com.example.weatherapp.databinding.FragmentWeatherBinding;
+import com.example.weatherapp.domin.adapters.WeatherRecyclerView;
 import com.example.weatherapp.presentation.WeatherState;
 import com.example.weatherapp.presentation.WeatherViewModel;
 
@@ -31,7 +34,6 @@ public class WeatherFragment extends Fragment {
     public WeatherFragment() {
         // Required empty public constructor
     }
-
     private WeatherViewModel viewModel;
     private WeatherState _weatherState;
 
@@ -50,7 +52,6 @@ public class WeatherFragment extends Fragment {
         binding = FragmentWeatherBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -61,7 +62,6 @@ public class WeatherFragment extends Fragment {
                 android.Manifest.permission.ACCESS_FINE_LOCATION,
                 android.Manifest.permission.ACCESS_COARSE_LOCATION
         });
-
     }
     private void observeLiveData(){
         viewModel.state.observe(getViewLifecycleOwner(), new Observer<WeatherState>() {
@@ -71,6 +71,7 @@ public class WeatherFragment extends Fragment {
                 if(weatherState.weatherInfo != null){
                     _weatherState = weatherState;
                     setupWeatherUi();
+                    setupWeatherRv();
                 }else{
                     Log.d("error","!!!");
                 }
@@ -90,6 +91,13 @@ public class WeatherFragment extends Fragment {
         );
         binding.tvWeatherTemprature.setText(
                 _weatherState.weatherInfo.currentWeatherData.temperatureCelsius + " °C");
+    }
+    private void setupWeatherRv(){
+        WeatherRecyclerView adapter = new WeatherRecyclerView(
+                _weatherState.weatherInfo.weatherDataPerDay.get(0),requireContext());
+        binding.rvTodayForecast.setLayoutManager(new LinearLayoutManager(requireContext(),
+                LinearLayoutManager.HORIZONTAL,false));
+        binding.rvTodayForecast.setAdapter(adapter);
     }
 
     @Override
