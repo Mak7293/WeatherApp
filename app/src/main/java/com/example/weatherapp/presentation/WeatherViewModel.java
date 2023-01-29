@@ -40,7 +40,15 @@ public class WeatherViewModel extends ViewModel {
     private final LocationTracker locationTracker;
     private final Application applicationContext;
     public MutableLiveData<WeatherState> state = new MutableLiveData<WeatherState>();
-    private final ScheduledExecutorService backgroundExecutor = Executors.newSingleThreadScheduledExecutor();
+    public MutableLiveData<WeatherUiState> weatherUiState = new MutableLiveData<WeatherUiState>();
+    private final ScheduledExecutorService backgroundExecutor =
+            Executors.newSingleThreadScheduledExecutor();
+    public enum WeatherUiState{
+        LOADING,
+        DATA_ERROR,
+        LOCATION_ERROR,
+        DATA_AVAILABLE
+    }
     @Inject
     public WeatherViewModel(
             WeatherRepository repository,
@@ -53,6 +61,7 @@ public class WeatherViewModel extends ViewModel {
     }
 
     public void loadWeatherInfo(){
+        weatherUiState.postValue(WeatherUiState.LOADING);
         backgroundExecutor.execute(new Runnable() {
             Executor mainExecutor = ContextCompat.getMainExecutor(applicationContext);
             @Override
@@ -73,8 +82,10 @@ public class WeatherViewModel extends ViewModel {
                             finalLocation.get(Utility.LATITUDE), finalLocation.get(Utility.LONGITUDE));
                     if (result instanceof Resource.Success) {
                         state.postValue(new WeatherState(result.data,false,null));
+                        weatherUiState.postValue(WeatherUiState.DATA_AVAILABLE);
                     } else if (result instanceof Resource.Error) {
                         state.postValue(new WeatherState(null,false, result.message));
+                        weatherUiState.postValue(WeatherUiState.DATA_ERROR);
                     }
                 }else {
                     state.postValue(new WeatherState(
@@ -82,6 +93,7 @@ public class WeatherViewModel extends ViewModel {
                             false,
                             "Couldn't retrieve location. Make sure to grant permission and enable GPS."
                     ));
+                    weatherUiState.postValue(WeatherUiState.LOCATION_ERROR);
                     Log.d("success",state.toString());
                 }
                 backgroundExecutor.shutdown();
