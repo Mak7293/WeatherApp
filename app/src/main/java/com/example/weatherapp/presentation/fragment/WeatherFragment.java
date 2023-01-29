@@ -31,6 +31,7 @@ import com.example.weatherapp.domin.util.Utility;
 import com.example.weatherapp.presentation.WeatherState;
 import com.example.weatherapp.presentation.WeatherViewModel;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 
 public class WeatherFragment extends Fragment {
@@ -87,38 +88,72 @@ public class WeatherFragment extends Fragment {
             @Override
             public void onChanged(WeatherViewModel.WeatherUiState weatherUiState) {
                 switch (weatherUiState){
-                    case LOADING:           hideWeatherData();
-                    case DATA_AVAILABLE:    showWeatherData();
-                    case DATA_ERROR:        showErrorMessage(Utility.ERROR_DATA);
-                    case LOCATION_ERROR:    showErrorMessage(Utility.ERROR_LOCATION);
+                    case LOADING: {
+                        hideWeatherData();
+                        break;
+                    }
+                    case DATA_AVAILABLE: {
+                        showWeatherData();
+                        break;
+                    }
+                    case DATA_ERROR: {
+                        showErrorMessage(Utility.ERROR_DATA);
+                        break;
+                    }
+                    case LOCATION_ERROR: {
+                        showErrorMessage(Utility.ERROR_LOCATION);
+                        break;
+                    }
                 }
             }
         });
     }
     private void hideWeatherData(){
         Log.d("invoke","111");
-
+        binding.tvError.setVisibility(View.INVISIBLE);
         constraintSet.clone(binding.mainContentConstraintLayout);
         constraintSet.connect(R.id.main_content_linear_layout,ConstraintSet.TOP,
                 R.id.main_content_constraint_layout,ConstraintSet.BOTTOM);
         constraintSet.connect(R.id.ll_location,ConstraintSet.END,
                 R.id.main_content_constraint_layout,ConstraintSet.START);
+        constraintSet.connect(R.id.ll_weather_temperature_state,ConstraintSet.START,
+                R.id.main_content_constraint_layout,ConstraintSet.END);
         constraintSet.clear(R.id.ll_location,ConstraintSet.START);
         constraintSet.clear(R.id.main_content_linear_layout,ConstraintSet.BOTTOM);
+        constraintSet.clear(R.id.ll_weather_temperature_state,ConstraintSet.END);
+
 
         ChangeBounds transition = new ChangeBounds();
         transition.setInterpolator(new AnticipateOvershootInterpolator(1.0f));
-        transition.setDuration(500L);
+        transition.setDuration(1000L);
         TransitionManager.beginDelayedTransition(binding.mainContentLinearLayout, transition);
+        TransitionManager.beginDelayedTransition(binding.llLocation, transition);
+        TransitionManager.beginDelayedTransition(binding.llWeatherTemperatureState, transition);
         constraintSet.applyTo(binding.mainContentConstraintLayout);
+
+
+        ViewGroup.LayoutParams layoutParams = binding.ivFrameLayout.getLayoutParams();
+        layoutParams.height = 0;
+        layoutParams.width = 0;
+        binding.ivFrameLayout.setLayoutParams(layoutParams);
+        transition.setInterpolator(new AnticipateOvershootInterpolator(1.0f));
+        transition.setDuration(750L);
+        TransitionManager.beginDelayedTransition(binding.ivFrameLayout, transition);
+        binding.ivFrameLayout.requestLayout();
 
     }
     private void showWeatherData(){
+        Log.d("invoke","222");
+        binding.tvError.setVisibility(View.INVISIBLE);
         constraintSet.clone(binding.mainContentConstraintLayout);
         constraintSet.connect(R.id.main_content_linear_layout,ConstraintSet.BOTTOM,
                 R.id.main_content_constraint_layout,ConstraintSet.BOTTOM);
         constraintSet.connect(R.id.ll_location,ConstraintSet.START,
                 R.id.main_content_constraint_layout,ConstraintSet.START);
+        constraintSet.connect(R.id.ll_weather_temperature_state,ConstraintSet.START,
+                R.id.main_content_constraint_layout,ConstraintSet.START);
+        constraintSet.connect(R.id.ll_weather_temperature_state,ConstraintSet.END,
+                R.id.main_content_constraint_layout,ConstraintSet.END);
         constraintSet.clear(R.id.ll_location,ConstraintSet.END);
         constraintSet.clear(R.id.main_content_linear_layout,ConstraintSet.TOP);
 
@@ -126,10 +161,32 @@ public class WeatherFragment extends Fragment {
         transition.setInterpolator(new AnticipateOvershootInterpolator(1.0f));
         transition.setDuration(1000L);
         TransitionManager.beginDelayedTransition(binding.mainContentLinearLayout, transition);
+        TransitionManager.beginDelayedTransition(binding.llLocation, transition);
+        TransitionManager.beginDelayedTransition(binding.llWeatherTemperatureState, transition);
         constraintSet.applyTo(binding.mainContentConstraintLayout);
+
+        ViewGroup.LayoutParams layoutParams = binding.ivFrameLayout.getLayoutParams();
+        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        binding.ivFrameLayout.setLayoutParams(layoutParams);
+        transition.setInterpolator(new AnticipateOvershootInterpolator(1.0f));
+        transition.setDuration(750L);
+        TransitionManager.beginDelayedTransition(binding.ivFrameLayout, transition);
+        binding.ivFrameLayout.requestLayout();
     }
     private void showErrorMessage(String errorType){
-
+        switch (errorType){
+            case Utility.ERROR_DATA:     {
+                binding.tvError.setVisibility(View.VISIBLE);
+                binding.tvError.setText("Can not download weather data form server. please try again later.");
+                break;
+            }
+            case Utility.ERROR_LOCATION: {
+                binding.tvError.setVisibility(View.VISIBLE);
+                binding.tvError.setText("Can not access to user location.");
+                break;
+            }
+        }
     }
     private void setupWeatherUi(){
         binding.tvPressure.setText(_weatherState.weatherInfo.currentWeatherData.pressure+" hpa");
@@ -142,7 +199,7 @@ public class WeatherFragment extends Fragment {
                 ContextCompat.getDrawable(requireContext(),
                         _weatherState.weatherInfo.currentWeatherData.weatherType.iconRes)
         );
-        binding.tvWeatherTemprature.setText(
+        binding.tvWeatherTemperature.setText(
                 _weatherState.weatherInfo.currentWeatherData.temperatureCelsius + " °C");
     }
     private void setupWeatherRv(){
