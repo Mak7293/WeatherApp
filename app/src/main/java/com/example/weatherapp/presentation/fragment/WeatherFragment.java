@@ -27,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnticipateOvershootInterpolator;
+import android.widget.Toast;
 
 import com.example.weatherapp.R;
 import com.example.weatherapp.databinding.FragmentWeatherBinding;
@@ -47,7 +48,7 @@ public class WeatherFragment extends Fragment {
         // Required empty public constructor
     }
     private WeatherViewModel viewModel;
-    private WeatherState _weatherState;
+    public static WeatherState _weatherState;
     private ConstraintSet constraintSet = new ConstraintSet();
     private ActivityResultLauncher<String[]> permissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestMultiplePermissions()
@@ -93,9 +94,14 @@ public class WeatherFragment extends Fragment {
         binding.tvGoToWeeklyForecast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(requireContext(), StatisticsActivity.class);
-                startActivity(intent);
+                if(_weatherState.weatherInfo!=null){
+                    Intent intent = new Intent(requireContext(), StatisticsActivity.class);
+                    startActivity(intent);
+                }else {
+                    Toast.makeText(requireContext(), "no weather forecast available to show.", Toast.LENGTH_SHORT).show();
+                }
             }
+
         });
 
     }
@@ -103,12 +109,13 @@ public class WeatherFragment extends Fragment {
         viewModel.state.observe(getViewLifecycleOwner(), new Observer<WeatherState>() {
             @Override
             public void onChanged(WeatherState weatherState) {
-                Log.d("observe", weatherState.weatherInfo.toString());
                 if(weatherState.weatherInfo != null){
+                    Log.d("observe", weatherState.weatherInfo.toString());
                     _weatherState = weatherState;
                     setupWeatherUi();
                     setupWeatherRv();
                 }else{
+                    _weatherState = weatherState;
                     Log.d("error","!!!");
                 }
             }
@@ -116,6 +123,7 @@ public class WeatherFragment extends Fragment {
         viewModel.weatherUiState.observe(getViewLifecycleOwner(), new Observer<WeatherViewModel.WeatherUiState>(){
             @Override
             public void onChanged(WeatherViewModel.WeatherUiState weatherUiState) {
+                Log.d("weatherUiState",weatherUiState.toString());
                 switch (weatherUiState){
                     case LOADING: {
                         hideWeatherData();
@@ -139,6 +147,7 @@ public class WeatherFragment extends Fragment {
     }
     private void hideWeatherData(){
         Log.d("invoke","111");
+        binding.progressBarLoading.setVisibility(View.VISIBLE);
         binding.tvError.setVisibility(View.INVISIBLE);
         constraintSet.clone(binding.mainContentConstraintLayout);
         constraintSet.connect(R.id.main_content_linear_layout,ConstraintSet.TOP,
@@ -151,7 +160,6 @@ public class WeatherFragment extends Fragment {
         constraintSet.clear(R.id.main_content_linear_layout,ConstraintSet.BOTTOM);
         constraintSet.clear(R.id.ll_weather_temperature_state,ConstraintSet.END);
 
-
         ChangeBounds transition = new ChangeBounds();
         transition.setInterpolator(new AnticipateOvershootInterpolator(1.0f));
         transition.setDuration(1000L);
@@ -159,7 +167,6 @@ public class WeatherFragment extends Fragment {
         TransitionManager.beginDelayedTransition(binding.llLocation, transition);
         TransitionManager.beginDelayedTransition(binding.llWeatherTemperatureState, transition);
         constraintSet.applyTo(binding.mainContentConstraintLayout);
-
 
         ViewGroup.LayoutParams ivLayoutParams = binding.ivFrameLayout.getLayoutParams();
         ivLayoutParams.height = 0;
@@ -182,6 +189,7 @@ public class WeatherFragment extends Fragment {
     }
     private void showWeatherData(){
         Log.d("invoke","222");
+        binding.progressBarLoading.setVisibility(View.GONE);
         binding.tvError.setVisibility(View.INVISIBLE);
         constraintSet.clone(binding.mainContentConstraintLayout);
         constraintSet.connect(R.id.main_content_linear_layout,ConstraintSet.BOTTOM,
@@ -224,14 +232,23 @@ public class WeatherFragment extends Fragment {
         switch (errorType){
             case Utility.ERROR_DATA:     {
                 binding.tvError.setVisibility(View.VISIBLE);
+                binding.progressBarLoading.setVisibility(View.GONE);
                 binding.tvError.setText("Can not download weather data form server. please try again later.");
                 break;
             }
             case Utility.ERROR_LOCATION: {
                 binding.tvError.setVisibility(View.VISIBLE);
+                binding.progressBarLoading.setVisibility(View.GONE);
                 binding.tvError.setText("Can not access to user location.");
                 break;
             }
+        }
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(viewModel.weatherUiState.getValue() == WeatherViewModel.WeatherUiState.DATA_AVAILABLE){
+            showWeatherData();
         }
     }
     private void setupWeatherUi(){

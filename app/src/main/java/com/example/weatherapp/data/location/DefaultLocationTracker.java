@@ -97,8 +97,7 @@ public class DefaultLocationTracker implements LocationTracker {
                     }
                 });
         HashMap<String,Double> location = new HashMap<>();
-        AtomicBoolean processed = new AtomicBoolean(true) ;
-
+        AtomicBoolean processed = new AtomicBoolean(true);
         locationTask.addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {

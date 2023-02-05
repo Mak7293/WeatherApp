@@ -10,6 +10,11 @@ public class Utility {
     public static final String URL = "v1/forecast?latitude=52.52&longitude=13.41&hourly=temperature_2m,weathercode,relativehumidity_2m,windspeed_10m,pressure_msl";
     public static final String ERROR_DATA = "error_data";
     public static final String ERROR_LOCATION = "error_location";
+    public static final String TEMPERATURE = "temperature";
+    public static final String PRESSURE = "pressure";
+    public static final String WIND_SPEED = "wind_speed";
+    public static final String HUMIDITY = "humidity";
+    public static final String WEATHER_STATE = "weather_state";
 
 
 }

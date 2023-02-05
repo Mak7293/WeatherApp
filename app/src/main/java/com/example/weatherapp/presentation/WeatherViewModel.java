@@ -62,10 +62,11 @@ public class WeatherViewModel extends ViewModel {
 
     public void loadWeatherInfo(){
         weatherUiState.postValue(WeatherUiState.LOADING);
+        state.postValue(new WeatherState(null, null));
         backgroundExecutor.execute(new Runnable() {
             Executor mainExecutor = ContextCompat.getMainExecutor(applicationContext);
             @Override
-            public void run() {
+            public void run(){
                 //state = new WeatherState(null, true, null);
                 HashMap<String, Double> location = null;
                 try {
@@ -81,16 +82,15 @@ public class WeatherViewModel extends ViewModel {
                     Resource<WeatherInfo> result = repository.getWeatherData(
                             finalLocation.get(Utility.LATITUDE), finalLocation.get(Utility.LONGITUDE));
                     if (result instanceof Resource.Success) {
-                        state.postValue(new WeatherState(result.data,false,null));
+                        state.postValue(new WeatherState(result.data,null));
                         weatherUiState.postValue(WeatherUiState.DATA_AVAILABLE);
                     } else if (result instanceof Resource.Error) {
-                        state.postValue(new WeatherState(null,false, result.message));
+                        state.postValue(new WeatherState(null, result.message));
                         weatherUiState.postValue(WeatherUiState.DATA_ERROR);
                     }
                 }else {
                     state.postValue(new WeatherState(
                             null,
-                            false,
                             "Couldn't retrieve location. Make sure to grant permission and enable GPS."
                     ));
                     weatherUiState.postValue(WeatherUiState.LOCATION_ERROR);
