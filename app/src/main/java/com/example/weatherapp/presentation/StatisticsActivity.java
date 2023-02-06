@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 
@@ -37,6 +38,7 @@ public class StatisticsActivity extends AppCompatActivity {
         binding = ActivityStatisticsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dark_green_6));
         setUpToolbar();
         weatherDataPerDay = Objects.requireNonNull(WeatherFragment
                 ._weatherState.weatherInfo).weatherDataPerDay;
@@ -44,9 +46,9 @@ public class StatisticsActivity extends AppCompatActivity {
                 lastDayChartData().get(Utility.TEMPERATURE));
         setupLastDayChart(binding.chartPressure,"Pressure hPa",
                 lastDayChartData().get(Utility.PRESSURE));
-        setupLastDayChart(binding.chartHumidity,"Wind Speed km/hr",
+        setupLastDayChart(binding.chartWindSpeed,"Wind Speed km/hr",
                 lastDayChartData().get(Utility.WIND_SPEED));
-        setupLastDayChart(binding.chartWindSpeed,"Humidity %",
+        setupLastDayChart(binding.chartHumidity,"Humidity %",
                 lastDayChartData().get(Utility.HUMIDITY));
 
         setup7daysChart(binding.chartTemperature7days, "Temperature°C",
@@ -88,8 +90,8 @@ public class StatisticsActivity extends AppCompatActivity {
         });
         map.put(Utility.TEMPERATURE,temperature);
         map.put(Utility.PRESSURE,pressure);
-        map.put(Utility.HUMIDITY,windSpeed);
-        map.put(Utility.WIND_SPEED,humidity);
+        map.put(Utility.HUMIDITY,humidity);
+        map.put(Utility.WIND_SPEED,windSpeed);
         return map;
     }
     private HashMap<String,List<Pair<Integer,Float>>> weeklyChartData(){
@@ -110,6 +112,13 @@ public class StatisticsActivity extends AppCompatActivity {
                 dailyAvgWindSpeed[0] += (float) n.windSpeed;
                 dailyAvgTemperature[0] += (float) n.temperatureCelsius;
             });
+            Log.d("humidity", String.valueOf(dailyAvgHumidity[0]));
+            dailyAvgHumidity[0] /= 24;
+            Log.d("humidity1", String.valueOf(dailyAvgHumidity[0]));
+            dailyAvgPressure[0] /= 24;
+            dailyAvgWindSpeed[0] /= 24;
+            dailyAvgTemperature[0] /= 24;
+
             temperatureList.add(new Pair<>(i,dailyAvgTemperature[0]));
             humidityList.add(new Pair<>(i,dailyAvgHumidity[0]));
             pressureList.add(new Pair<>(i,dailyAvgPressure[0]));
@@ -263,7 +272,7 @@ public class StatisticsActivity extends AppCompatActivity {
             if(value == 0){
                 return "Today";
             } else if (value == 1) {
-                return "Yesterday";
+                return "Tomorrow";
             } else {
                 return String.valueOf(((int) value));
             }

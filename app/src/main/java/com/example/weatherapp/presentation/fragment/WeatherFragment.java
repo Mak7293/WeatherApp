@@ -264,6 +264,13 @@ public class WeatherFragment extends Fragment {
         );
         binding.tvWeatherTemperature.setText(
                 _weatherState.weatherInfo.currentWeatherData.temperatureCelsius + " °C");
+        binding.tvLastUpdate.setText(generateCurrentTime());
+    }
+    private String generateCurrentTime(){
+        String year = String.valueOf(_weatherState.weatherInfo.currentWeatherData.time.getYear());
+        String month = String.valueOf(_weatherState.weatherInfo.currentWeatherData.time.getMonth());
+        String day = String.valueOf(_weatherState.weatherInfo.currentWeatherData.time.getDayOfMonth());
+        return day + "/" + month + "/" + year;
     }
     private void setupWeatherRv(){
         WeatherRecyclerView adapter = new WeatherRecyclerView(

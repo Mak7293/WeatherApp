@@ -17,6 +17,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/ic_add"
+        app:tint="@null"
         android:layout_margin="15dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
