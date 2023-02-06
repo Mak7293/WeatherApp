@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.example.weatherapp.R;
 import com.example.weatherapp.databinding.FragmentLocationListBinding;
+import com.example.weatherapp.domin.util.MaterialBottomSheet;
 
 
 public class LocationListFragment extends Fragment {
@@ -34,12 +35,14 @@ public class LocationListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-    }
+        binding.fabAddLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MaterialBottomSheet modalBottomSheet = new MaterialBottomSheet();
+                modalBottomSheet.show(requireActivity().getSupportFragmentManager(), MaterialBottomSheet.TAG);
+            }
+        });
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d("resume","location");
     }
 
     @Override
