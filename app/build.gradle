@@ -45,6 +45,16 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
+    //Google Maps Location Services
+    implementation 'com.google.android.gms:play-services-location:21.0.0'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+
+    // open street map component
+    implementation 'org.osmdroid:osmdroid-android:6.1.12'
+
+    //osmdroid bonusPack
+    implementation 'com.github.MKergall:osmbonuspack:6.9.0'
+
     //Dagger - Hilt
     implementation "com.google.dagger:hilt-android:2.42"
     annotationProcessor "com.google.dagger:hilt-android-compiler:2.42"
