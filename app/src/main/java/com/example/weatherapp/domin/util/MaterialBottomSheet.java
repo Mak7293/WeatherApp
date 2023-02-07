@@ -1,6 +1,9 @@
 package com.example.weatherapp.domin.util;
 
+import android.app.Application;
+import android.content.Context;
 import android.location.Address;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,9 +14,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.weatherapp.R;
 import com.example.weatherapp.databinding.BottomSheetBinding;
+import com.example.weatherapp.presentation.LocationListViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -22,9 +28,14 @@ import com.google.android.material.divider.MaterialDivider;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
@@ -33,17 +44,19 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.observers.DisposableObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
+@AndroidEntryPoint
 public class MaterialBottomSheet extends BottomSheetDialogFragment {
-
-    public MaterialBottomSheet(){
-
-    }
-    private BottomSheetBinding binding;
+    @Inject
+    Application context;
     private List<Address> address = new ArrayList<>();
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private final ScheduledExecutorService backgroundExecutor =
             Executors.newSingleThreadScheduledExecutor();
+    @Inject
+    public MaterialBottomSheet(){
+    }
+    private BottomSheetBinding binding;
     public static String TAG = "modalBottomSheet";
+    private LocationListViewModel viewModel;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -51,31 +64,17 @@ public class MaterialBottomSheet extends BottomSheetDialogFragment {
         binding = BottomSheetBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
+        viewModel = new ViewModelProvider(requireActivity()).get(LocationListViewModel.class);
         binding.ibSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!binding.etLocation.getText().toString().isEmpty()){
-                    backgroundExecutor.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                address = new GeocoderNominatim(requireContext()).getFromLocationName(
-                                        binding.etLocation.getText().toString(),0);
-                                Log.d("address", address.get(0).toString());
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                            backgroundExecutor.shutdown();
-                        }
-                    });
+                    searchLocation(binding.etLocation.getText().toString());
                 }else {
-                    Toast.makeText(requireContext(),"Please Enter location",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context,"Please Enter location",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -83,9 +82,48 @@ public class MaterialBottomSheet extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 dismiss();
+                backgroundExecutor.shutdown();
             }
         });
         getDialog().setCancelable(false);
+    }
+    private void searchLocation(String location){
+        Executor mainExecutor = ContextCompat.getMainExecutor(context);
+        backgroundExecutor.execute(new Runnable(){
+            @Override
+            public void run() {
+
+                try {
+                    address = new GeocoderNominatim(context).getFromLocationName(
+                            location,0);
+                    Log.d("address",address.toString());
+                    mainExecutor.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            setupBottomSheetCard(address.get(0));
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+
+    public void setupBottomSheetCard(Address address){
+        binding.llResult.setVisibility(View.VISIBLE);
+        String locality = "";
+        if(address.getLocality() == null) {
+            locality = Objects.requireNonNull(binding.etLocation.getText()).toString();
+        }else {
+            locality = address.getLocality();
+        }
+        binding.tvLocationName.setText(locality);
+        binding.tvProvinceName.setText(address.getAdminArea());
+        binding.tvCountryName.setText(address.getCountryName());
+        binding.tvLatitude.setText(String.valueOf((double) address.getLatitude()));
+        binding.tvLongitude.setText(String.valueOf((double) address.getLongitude()));
     }
 
 }

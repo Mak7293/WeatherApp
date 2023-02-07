@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+
 public class GeocoderNominatim {
 
     public static final String NOMINATIM_SERVICE_URL = "http://nominatim.openstreetmap.org/";
@@ -29,7 +30,6 @@ public class GeocoderNominatim {
     protected Locale mLocale;
     protected String mServiceUrl;
     protected boolean mPolygon;
-
     public GeocoderNominatim(Context context, Locale locale){
         mLocale = locale;
         setOptions(false);
@@ -67,6 +67,7 @@ public class GeocoderNominatim {
      */
     protected Address buildAndroidAddress(JsonObject jResult) throws JsonSyntaxException {
         Address gAddress = new Address(mLocale);
+        Log.d("jAddress",jResult.toString());
         gAddress.setLatitude(jResult.get("lat").getAsDouble());
         gAddress.setLongitude(jResult.get("lon").getAsDouble());
 
@@ -186,7 +187,6 @@ public class GeocoderNominatim {
             throw new IOException();
         }
     }
-
     /**
      * Equivalent to Geocoder::getFromLocation(String locationName, int maxResults, double lowerLeftLatitude, double lowerLeftLongitude, double upperRightLatitude, double upperRightLongitude)
      * but adding bounded parameter.

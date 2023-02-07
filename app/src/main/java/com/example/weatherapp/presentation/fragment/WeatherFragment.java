@@ -33,7 +33,6 @@ import com.example.weatherapp.R;
 import com.example.weatherapp.databinding.FragmentWeatherBinding;
 import com.example.weatherapp.domin.adapters.WeatherRecyclerView;
 import com.example.weatherapp.domin.util.Utility;
-import com.example.weatherapp.presentation.StatisticsActivity;
 import com.example.weatherapp.presentation.WeatherState;
 import com.example.weatherapp.presentation.WeatherViewModel;
 import java.util.Map;
@@ -95,13 +94,18 @@ public class WeatherFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(_weatherState.weatherInfo!=null){
-                    Intent intent = new Intent(requireContext(), StatisticsActivity.class);
-                    startActivity(intent);
+                    viewModel.weatherEvent(WeatherViewModel.WeatherEvent.DETAILS_FORECAST);
                 }else {
                     Toast.makeText(requireContext(), "no weather forecast available to show.", Toast.LENGTH_SHORT).show();
                 }
             }
 
+        });
+        binding.llGetLatestData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.weatherEvent(WeatherViewModel.WeatherEvent.GET_LATEST_DATA);
+            }
         });
 
     }

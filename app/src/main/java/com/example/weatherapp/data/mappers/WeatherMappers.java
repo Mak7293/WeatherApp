@@ -2,8 +2,8 @@ package com.example.weatherapp.data.mappers;
 
 import android.util.Log;
 
-import com.example.weatherapp.data.remote.WeatherDataDto;
-import com.example.weatherapp.data.remote.WeatherDto;
+import com.example.weatherapp.data.data_source.remote.WeatherDataDto;
+import com.example.weatherapp.data.data_source.remote.WeatherDto;
 import com.example.weatherapp.domin.weather.WeatherData;
 import com.example.weatherapp.domin.weather.WeatherInfo;
 import com.example.weatherapp.domin.weather.WeatherType;
@@ -11,7 +11,6 @@ import com.example.weatherapp.domin.weather.WeatherType;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 

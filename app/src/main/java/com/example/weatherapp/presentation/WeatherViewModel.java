@@ -2,41 +2,29 @@ package com.example.weatherapp.presentation;
 
 
 import android.app.Application;
-import android.location.Location;
+import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.LiveDataReactiveStreams;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.weatherapp.domin.location.LocationTracker;
-import com.example.weatherapp.domin.repository.WeatherRepository;
+import com.example.weatherapp.domin.repository.Repository;
 import com.example.weatherapp.domin.util.Resource;
 import com.example.weatherapp.domin.util.Utility;
 import com.example.weatherapp.domin.weather.WeatherInfo;
 
 import java.util.HashMap;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.ObservableEmitter;
-import io.reactivex.rxjava3.core.ObservableOnSubscribe;
-import io.reactivex.rxjava3.core.Observer;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
 @HiltViewModel
 public class WeatherViewModel extends ViewModel {
-    private final WeatherRepository repository;
+    private final Repository repository;
     private final LocationTracker locationTracker;
     private final Application applicationContext;
     public MutableLiveData<WeatherState> state = new MutableLiveData<WeatherState>();
@@ -49,9 +37,13 @@ public class WeatherViewModel extends ViewModel {
         LOCATION_ERROR,
         DATA_AVAILABLE
     }
+    public enum WeatherEvent {
+        GET_LATEST_DATA,
+        DETAILS_FORECAST
+    }
     @Inject
     public WeatherViewModel(
-            WeatherRepository repository,
+            Repository repository,
             LocationTracker locationTracker,
             Application applicationContext
     ){
@@ -64,7 +56,6 @@ public class WeatherViewModel extends ViewModel {
         weatherUiState.postValue(WeatherUiState.LOADING);
         state.postValue(new WeatherState(null, null));
         backgroundExecutor.execute(new Runnable() {
-            Executor mainExecutor = ContextCompat.getMainExecutor(applicationContext);
             @Override
             public void run(){
                 //state = new WeatherState(null, true, null);
@@ -99,5 +90,20 @@ public class WeatherViewModel extends ViewModel {
                 backgroundExecutor.shutdown();
             }
         });
+    }
+    public void weatherEvent(WeatherEvent event){
+        switch (event){
+            case DETAILS_FORECAST: {
+                Intent intent = new Intent(applicationContext, StatisticsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                applicationContext.startActivity(intent);
+                break;
+            }
+            case GET_LATEST_DATA: {
+                Toast.makeText(applicationContext,"refresh data",Toast.LENGTH_SHORT).show();
+                break;
+            }
+        }
+
     }
 }

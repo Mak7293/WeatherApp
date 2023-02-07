@@ -1,8 +1,7 @@
 package com.example.weatherapp.di;
 
 
-import com.example.weatherapp.data.repository.WeatherRepositoryImpl;
-import com.example.weatherapp.domin.repository.WeatherRepository;
+import com.example.weatherapp.data.repository.RepositoryImp;
 
 import javax.inject.Singleton;
 
@@ -17,5 +16,5 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract WeatherRepository bindWeatherRepository(WeatherRepositoryImpl weatherRepositoryImpl);
+    abstract com.example.weatherapp.domin.repository.Repository bindWeatherRepository(RepositoryImp weatherRepositoryImpl);
 }

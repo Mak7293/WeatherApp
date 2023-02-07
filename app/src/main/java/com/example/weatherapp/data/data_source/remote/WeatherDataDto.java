@@ -1,4 +1,4 @@
-package com.example.weatherapp.data.remote;
+package com.example.weatherapp.data.data_source.remote;
 
 import java.util.List;
 

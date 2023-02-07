@@ -1,39 +1,40 @@
 package com.example.weatherapp.data.repository;
 
 import android.location.Location;
-import android.os.strictmode.CredentialProtectedWhileLockedViolation;
 import android.util.Log;
 
-import com.example.weatherapp.data.mappers.WeatherMappers;
-import com.example.weatherapp.data.remote.WeatherApi;
+import androidx.lifecycle.LiveData;
 
-import com.example.weatherapp.data.remote.WeatherDto;
-import com.example.weatherapp.domin.repository.WeatherRepository;
+import com.example.weatherapp.data.data_source.local.LocationDao;
+import com.example.weatherapp.data.mappers.WeatherMappers;
+import com.example.weatherapp.data.data_source.remote.WeatherApi;
+
+import com.example.weatherapp.data.data_source.remote.WeatherDto;
+import com.example.weatherapp.domin.model.LocationEntity;
 import com.example.weatherapp.domin.util.Resource;
 import com.example.weatherapp.domin.weather.WeatherInfo;
-import com.example.weatherapp.presentation.WeatherViewModel;
-import com.google.android.gms.tasks.Task;
+import com.example.weatherapp.domin.repository.Repository;
 
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.observers.DisposableObserver;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class WeatherRepositoryImpl implements WeatherRepository {
+public class RepositoryImp implements Repository {
     WeatherApi api;
+    LocationDao dao;
     @Inject
-    public WeatherRepositoryImpl(WeatherApi api){
+    public RepositoryImp(
+            WeatherApi api,
+            LocationDao dao
+    ){
         this.api = api;
+        this.dao = dao;
     }
-
     @Override
     public Resource<WeatherInfo> getWeatherData(double lat, double lng) {
         Log.d("input", String.valueOf(lat) + lng);
@@ -110,5 +111,17 @@ public class WeatherRepositoryImpl implements WeatherRepository {
             }
             return new Resource.Error(null, message);
         }
+    }
+    @Override
+    public LiveData<LocationEntity> getNotes() {
+        return dao.fetchAllLocation();
+    }
+    @Override
+    public void insertNote(LocationEntity location) {
+        dao.insertLocation(location);
+    }
+    @Override
+    public void deleteNote(LocationEntity location) {
+        dao.deleteLocation(location);
     }
 }
