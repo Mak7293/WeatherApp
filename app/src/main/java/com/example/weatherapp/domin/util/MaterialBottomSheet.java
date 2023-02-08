@@ -1,30 +1,21 @@
 package com.example.weatherapp.domin.util;
 
 import android.app.Application;
-import android.content.Context;
 import android.location.Address;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
-
-import com.example.weatherapp.R;
 import com.example.weatherapp.databinding.BottomSheetBinding;
+import com.example.weatherapp.domin.model.LocationEntity;
 import com.example.weatherapp.presentation.LocationListViewModel;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.android.material.divider.MaterialDivider;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,23 +23,15 @@ import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-
 import javax.inject.Inject;
-
 import dagger.hilt.android.AndroidEntryPoint;
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Observer;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.observers.DisposableObserver;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
 @AndroidEntryPoint
 public class MaterialBottomSheet extends BottomSheetDialogFragment {
     @Inject
     Application context;
     private List<Address> address = new ArrayList<>();
+    private LocationListViewModel viewModel;
     private final ScheduledExecutorService backgroundExecutor =
             Executors.newSingleThreadScheduledExecutor();
     @Inject
@@ -56,7 +39,6 @@ public class MaterialBottomSheet extends BottomSheetDialogFragment {
     }
     private BottomSheetBinding binding;
     public static String TAG = "modalBottomSheet";
-    private LocationListViewModel viewModel;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -83,6 +65,28 @@ public class MaterialBottomSheet extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 dismiss();
                 backgroundExecutor.shutdown();
+            }
+        });
+        binding.btnSaveToDatabase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!address.isEmpty()){
+                    LocationEntity location = new LocationEntity(
+                            0,
+                            address.get(0).getLocality(),
+                            address.get(0).getAdminArea(),
+                            address.get(0).getCountryName(),
+                            address.get(0).getLatitude(),
+                            address.get(0).getLongitude()
+                    );
+                    viewModel.locationListEvent(
+                            LocationListViewModel.LocationListEvent.SAVE_LOCATION,null,location);
+                    dismiss();
+                }else {
+                    Toast.makeText(context,
+                            "Please first search a location",Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
         getDialog().setCancelable(false);

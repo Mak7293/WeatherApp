@@ -8,6 +8,10 @@ import androidx.room.Query;
 
 import com.example.weatherapp.domin.model.LocationEntity;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 @Dao
 public interface LocationDao {
 
@@ -17,7 +21,8 @@ public interface LocationDao {
     @Delete
     void deleteLocation(LocationEntity location);
 
+
     @Query("SELECT * FROM location_table")
-    LiveData<LocationEntity> fetchAllLocation();
+    LiveData<List<LocationEntity>> fetchAllLocation();
 
 }

@@ -11,7 +11,7 @@ import com.example.weatherapp.domin.model.LocationEntity;
 )
 public abstract class LocationDatabase extends RoomDatabase {
 
-    public LocationDao locationDao;
+    abstract public LocationDao locationDao();
 
     public final static String DATABASE_NAME = "location_db";
 

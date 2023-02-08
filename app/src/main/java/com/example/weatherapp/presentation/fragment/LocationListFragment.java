@@ -44,7 +44,7 @@ public class LocationListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 viewModel.locationListEvent(
-                        LocationListViewModel.LocationListEvent.SHOW_BOTTOM_SHEET,requireActivity());
+                        LocationListViewModel.LocationListEvent.SHOW_BOTTOM_SHEET,requireActivity(),null);
             }
         });
     }

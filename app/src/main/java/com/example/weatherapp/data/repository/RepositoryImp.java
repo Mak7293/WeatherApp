@@ -16,6 +16,7 @@ import com.example.weatherapp.domin.weather.WeatherInfo;
 import com.example.weatherapp.domin.repository.Repository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
@@ -113,15 +114,15 @@ public class RepositoryImp implements Repository {
         }
     }
     @Override
-    public LiveData<LocationEntity> getNotes() {
+    public LiveData<List<LocationEntity>> getAllLocation() {
         return dao.fetchAllLocation();
     }
     @Override
-    public void insertNote(LocationEntity location) {
+    public void insertLocation(LocationEntity location) {
         dao.insertLocation(location);
     }
     @Override
-    public void deleteNote(LocationEntity location) {
+    public void deleteLocation(LocationEntity location) {
         dao.deleteLocation(location);
     }
 }

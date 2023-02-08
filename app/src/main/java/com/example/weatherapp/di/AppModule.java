@@ -46,13 +46,12 @@ public class AppModule {
     }
     @Provides
     @Singleton
-    FusedLocationProviderClient provideFusedLocationProviderClient(
-            @ApplicationContext Application app){
+    FusedLocationProviderClient provideFusedLocationProviderClient(Application app){
         return LocationServices.getFusedLocationProviderClient(app);
     }
     @Provides
     @Singleton
-    LocationDatabase provideNoteDatabase(@ApplicationContext Application app){
+    LocationDatabase provideLocationDatabase(Application app){
         return Room.databaseBuilder(
                 app,
                 LocationDatabase.class,
@@ -61,10 +60,10 @@ public class AppModule {
     }
     @Provides
     @Singleton
-    Repository provideNoteRepository(LocationDatabase db) {
+    Repository provideLocationRepository(LocationDatabase db) {
         return new RepositoryImp(
                 provideWeatherApi(provideHttpClient()),
-                db.locationDao
+                db.locationDao()
         );
     }
 }
