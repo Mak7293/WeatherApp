@@ -1,4 +1,4 @@
-package com.example.weatherapp.presentation;
+package com.example.weatherapp.presentation.activities;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +13,7 @@ import com.example.weatherapp.R;
 import com.example.weatherapp.databinding.ActivityStatisticsBinding;
 import com.example.weatherapp.domin.util.Utility;
 import com.example.weatherapp.domin.weather.WeatherData;
-import com.example.weatherapp.presentation.fragment.WeatherFragment;
+import com.example.weatherapp.presentation.fragments.WeatherFragment;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -51,13 +51,13 @@ public class StatisticsActivity extends AppCompatActivity {
         setupLastDayChart(binding.chartHumidity,"Humidity %",
                 lastDayChartData().get(Utility.HUMIDITY));
 
-        setup7daysChart(binding.chartTemperature7days, "Temperature°C",
+        setup7daysChart(binding.chartTemperature7days, "Average Temperature°C",
                 weeklyChartData().get(Utility.TEMPERATURE));
-        setup7daysChart(binding.chartPressure7days,"Pressure hPa",
+        setup7daysChart(binding.chartPressure7days,"Average Pressure hPa",
                 weeklyChartData().get(Utility.PRESSURE));
-        setup7daysChart(binding.chartWindSpeed7days,"Wind Speed km/hr",
+        setup7daysChart(binding.chartWindSpeed7days,"Average Wind Speed km/hr",
                 weeklyChartData().get(Utility.WIND_SPEED));
-        setup7daysChart(binding.chartHumidity7days,"Humidity %",
+        setup7daysChart(binding.chartHumidity7days,"Average Humidity %",
                 weeklyChartData().get(Utility.HUMIDITY));
     }
     private void setUpToolbar(){

@@ -14,7 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.weatherapp.databinding.BottomSheetBinding;
 import com.example.weatherapp.domin.model.LocationEntity;
-import com.example.weatherapp.presentation.LocationListViewModel;
+import com.example.weatherapp.presentation.view_models.LocationListViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -96,7 +96,6 @@ public class MaterialBottomSheet extends BottomSheetDialogFragment {
         backgroundExecutor.execute(new Runnable(){
             @Override
             public void run() {
-
                 try {
                     address = new GeocoderNominatim(context).getFromLocationName(
                             location,0);
@@ -114,7 +113,6 @@ public class MaterialBottomSheet extends BottomSheetDialogFragment {
         });
 
     }
-
     public void setupBottomSheetCard(Address address){
         binding.llResult.setVisibility(View.VISIBLE);
         String locality = "";

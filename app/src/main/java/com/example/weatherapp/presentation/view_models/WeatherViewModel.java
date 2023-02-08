@@ -1,4 +1,4 @@
-package com.example.weatherapp.presentation;
+package com.example.weatherapp.presentation.view_models;
 
 
 import android.app.Application;
@@ -14,6 +14,8 @@ import com.example.weatherapp.domin.repository.Repository;
 import com.example.weatherapp.domin.util.Resource;
 import com.example.weatherapp.domin.util.Utility;
 import com.example.weatherapp.domin.weather.WeatherInfo;
+import com.example.weatherapp.presentation.WeatherState;
+import com.example.weatherapp.presentation.activities.StatisticsActivity;
 
 import java.util.HashMap;
 import java.util.concurrent.Executors;

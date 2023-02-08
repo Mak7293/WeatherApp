@@ -6,7 +6,7 @@
     android:background="@color/dark_green_8"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.StatisticsActivity">
+    tools:context=".presentation.activities.StatisticsActivity">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"

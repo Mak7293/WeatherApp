@@ -21,7 +21,6 @@ public interface LocationDao {
     @Delete
     void deleteLocation(LocationEntity location);
 
-
     @Query("SELECT * FROM location_table")
     LiveData<List<LocationEntity>> fetchAllLocation();
 

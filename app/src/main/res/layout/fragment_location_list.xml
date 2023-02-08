@@ -5,13 +5,12 @@
     android:layout_height="match_parent"
     android:background="@color/dark_green_8"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".presentation.fragment.LocationListFragment">
+    tools:context=".presentation.fragments.LocationListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/location_list"
+        android:id="@+id/rv_location_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:layout_height="match_parent"/>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_location"
         android:layout_width="wrap_content"

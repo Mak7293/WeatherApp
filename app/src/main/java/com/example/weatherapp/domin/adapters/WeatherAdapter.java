@@ -14,12 +14,12 @@ import com.example.weatherapp.domin.weather.WeatherData;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class WeatherRecyclerView extends RecyclerView.Adapter<WeatherRecyclerView.ViewHolder>{
+public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHolder>{
 
     private List<WeatherData> list;
     private Context context;
 
-    public WeatherRecyclerView(List<WeatherData> list, Context context){
+    public WeatherAdapter(List<WeatherData> list, Context context){
         this.list = list;
         this.context = context;
     }

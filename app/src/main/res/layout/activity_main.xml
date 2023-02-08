@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.MainActivity">
+    tools:context=".presentation.activities.MainActivity">
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/tab_viewpager"
@@ -12,7 +12,8 @@
         android:layout_height="0dp"
         android:background="@color/dark_green_8"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_constraintBottom_toTopOf="@id/tab_table_layout"/>
+        app:layout_constraintBottom_toTopOf="@id/tab_table_layout"
+        app:layout_constraintTop_toTopOf="parent"/>
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_table_layout"
         android:layout_width="match_parent"

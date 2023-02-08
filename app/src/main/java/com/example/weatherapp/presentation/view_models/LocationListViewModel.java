@@ -1,28 +1,22 @@
-package com.example.weatherapp.presentation;
+package com.example.weatherapp.presentation.view_models;
 
-import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
-import android.location.Address;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
+import com.example.weatherapp.domin.adapters.LocationListAdapter;
 import com.example.weatherapp.domin.model.LocationEntity;
 import com.example.weatherapp.domin.repository.Repository;
-import com.example.weatherapp.domin.util.GeocoderNominatim;
 import com.example.weatherapp.domin.util.MaterialBottomSheet;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -30,13 +24,15 @@ import java.util.concurrent.ScheduledExecutorService;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import dagger.hilt.android.qualifiers.ActivityContext;
+
 
 @HiltViewModel
 public class LocationListViewModel extends ViewModel {
     Application applicationContext;
     Repository repository;
     private final ScheduledExecutorService backgroundExecutor =
+            Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService backgroundExecutor_one =
             Executors.newSingleThreadScheduledExecutor();
     @Inject
     public LocationListViewModel(
@@ -62,7 +58,6 @@ public class LocationListViewModel extends ViewModel {
                 break;
             }
             case SAVE_LOCATION: {
-                Log.d("hhhh","0");
                 saveLocationToDatabase(location);
                 break;
             }
@@ -73,14 +68,11 @@ public class LocationListViewModel extends ViewModel {
         modalBottomSheet.show(activity.getSupportFragmentManager(), MaterialBottomSheet.TAG);
     }
     private void saveLocationToDatabase(LocationEntity location){
-        Log.d("hhhh","1");
         Executor mainExecutor = ContextCompat.getMainExecutor(applicationContext);
         backgroundExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                Log.d("hhhh","2");
                 repository.insertLocation(location);
-                Log.d("hhhh","3");
                 mainExecutor.execute(new Runnable() {
                     @Override
                     public void run() {
@@ -92,6 +84,13 @@ public class LocationListViewModel extends ViewModel {
             }
         });
     }
+    public LiveData<List<LocationEntity>> getAllData(){
+        return repository.getAllLocation();
+    };
 
-
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        backgroundExecutor_one.shutdown();
+    }
 }

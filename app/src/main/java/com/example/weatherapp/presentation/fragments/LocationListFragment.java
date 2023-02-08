@@ -1,22 +1,26 @@
-package com.example.weatherapp.presentation.fragment;
+package com.example.weatherapp.presentation.fragments;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.weatherapp.R;
 import com.example.weatherapp.databinding.FragmentLocationListBinding;
-import com.example.weatherapp.domin.util.MaterialBottomSheet;
-import com.example.weatherapp.presentation.LocationListViewModel;
-import com.example.weatherapp.presentation.WeatherViewModel;
+import com.example.weatherapp.domin.adapters.LocationListAdapter;
+import com.example.weatherapp.domin.adapters.WeatherAdapter;
+import com.example.weatherapp.domin.model.LocationEntity;
+import com.example.weatherapp.presentation.view_models.LocationListViewModel;
+
+import java.util.List;
 
 
 public class LocationListFragment extends Fragment {
@@ -47,6 +51,24 @@ public class LocationListFragment extends Fragment {
                         LocationListViewModel.LocationListEvent.SHOW_BOTTOM_SHEET,requireActivity(),null);
             }
         });
+        observeViewModelLiveData();
+    }
+    private void observeViewModelLiveData(){
+        Log.d("location!!","!!!!!");
+        viewModel.getAllData().observe(getViewLifecycleOwner(), new Observer<List<LocationEntity>>() {
+            @Override
+            public void onChanged(List<LocationEntity> locationEntities) {
+                Log.d("location!!",locationEntities.toString());
+                setupLocationListRv(locationEntities);
+            }
+        });
+    }
+    private void setupLocationListRv(List<LocationEntity> list){
+        LocationListAdapter adapter = new LocationListAdapter(
+                list,requireContext());
+        binding.rvLocationList.setLayoutManager(new LinearLayoutManager(requireContext(),
+                LinearLayoutManager.VERTICAL,false));
+        binding.rvLocationList.setAdapter(adapter);
     }
     @Override
     public void onDestroy() {

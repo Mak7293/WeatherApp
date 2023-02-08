@@ -1,4 +1,4 @@
-package com.example.weatherapp.presentation;
+package com.example.weatherapp.presentation.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -9,8 +9,8 @@ import android.os.Bundle;
 import com.example.weatherapp.R;
 import com.example.weatherapp.domin.adapters.ViewPagerAdapter;
 import com.example.weatherapp.databinding.ActivityMainBinding;
-import com.example.weatherapp.presentation.fragment.LocationListFragment;
-import com.example.weatherapp.presentation.fragment.WeatherFragment;
+import com.example.weatherapp.presentation.fragments.LocationListFragment;
+import com.example.weatherapp.presentation.fragments.WeatherFragment;
 
 import java.util.ArrayList;
 import java.util.List;

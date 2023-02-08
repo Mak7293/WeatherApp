@@ -1,4 +1,4 @@
-package com.example.weatherapp.presentation.fragment;
+package com.example.weatherapp.presentation.fragments;
 
 
 import androidx.activity.result.ActivityResultCallback;
@@ -31,10 +31,10 @@ import android.widget.Toast;
 
 import com.example.weatherapp.R;
 import com.example.weatherapp.databinding.FragmentWeatherBinding;
-import com.example.weatherapp.domin.adapters.WeatherRecyclerView;
+import com.example.weatherapp.domin.adapters.WeatherAdapter;
 import com.example.weatherapp.domin.util.Utility;
 import com.example.weatherapp.presentation.WeatherState;
-import com.example.weatherapp.presentation.WeatherViewModel;
+import com.example.weatherapp.presentation.view_models.WeatherViewModel;
 import java.util.Map;
 import java.util.Objects;
 
@@ -277,7 +277,7 @@ public class WeatherFragment extends Fragment {
         return day + "/" + month + "/" + year;
     }
     private void setupWeatherRv(){
-        WeatherRecyclerView adapter = new WeatherRecyclerView(
+        WeatherAdapter adapter = new WeatherAdapter(
                 _weatherState.weatherInfo.weatherDataPerDay.get(0),requireContext());
         binding.rvTodayForecast.setLayoutManager(new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.HORIZONTAL,false));
