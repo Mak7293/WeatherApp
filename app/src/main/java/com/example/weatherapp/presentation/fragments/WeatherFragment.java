@@ -145,6 +145,11 @@ public class WeatherFragment extends Fragment {
                         showErrorMessage(Utility.ERROR_LOCATION);
                         break;
                     }
+                    case INTERNET_CONNECTION_ERROR: {
+                        hideWeatherData();
+                        showErrorMessage(Utility.ERROR_INTERNET_CONNECTION);
+                        break;
+                    }
                 }
             }
         });
@@ -244,6 +249,12 @@ public class WeatherFragment extends Fragment {
                 binding.tvError.setVisibility(View.VISIBLE);
                 binding.progressBarLoading.setVisibility(View.GONE);
                 binding.tvError.setText("Can not access to user location.");
+                break;
+            }
+            case Utility.ERROR_INTERNET_CONNECTION: {
+                binding.tvError.setVisibility(View.VISIBLE);
+                binding.progressBarLoading.setVisibility(View.GONE);
+                binding.tvError.setText("Your Internet is not connected.");
                 break;
             }
         }

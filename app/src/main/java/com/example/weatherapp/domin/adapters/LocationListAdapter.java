@@ -25,6 +25,20 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         this.list = list;
         this.context = context;
     }
+    public interface OnClickListenerDelete{
+        void onClickDelete(int position);
+    }
+    public interface OnClickListenerSetCurrentLocation{
+        void onClickSetCurrentLocation(int position);
+    }
+    OnClickListenerDelete onClickListenerDelete;
+    OnClickListenerSetCurrentLocation onClickListenerSetCurrentLocation;
+    public void onClickListenerDelete(OnClickListenerDelete onClickListener){
+        this.onClickListenerDelete = onClickListener;
+    }
+    public void onClickListenerSetCurrentLocation(OnClickListenerSetCurrentLocation onClickListener){
+        this.onClickListenerSetCurrentLocation = onClickListener;
+    }
     public class ViewHolder extends RecyclerView.ViewHolder{
         LocationRvItemBinding binding;
         public ViewHolder(@NonNull LocationRvItemBinding binding) {
@@ -50,13 +64,14 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         holder.binding.btnDeleteLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                onClickListenerDelete.onClickDelete(holder.getAdapterPosition());
             }
         });
         holder.binding.btnSetAsCurrentLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                onClickListenerSetCurrentLocation
+                        .onClickSetCurrentLocation(getItemViewType(holder.getAdapterPosition()));
             }
         });
 

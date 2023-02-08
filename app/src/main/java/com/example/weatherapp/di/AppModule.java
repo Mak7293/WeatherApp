@@ -60,7 +60,7 @@ public class AppModule {
     }
     @Provides
     @Singleton
-    Repository provideLocationRepository(LocationDatabase db) {
+    Repository provideLocationRepository(LocationDatabase db,Application app) {
         return new RepositoryImp(
                 provideWeatherApi(provideHttpClient()),
                 db.locationDao()

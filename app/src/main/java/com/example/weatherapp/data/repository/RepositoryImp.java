@@ -1,5 +1,6 @@
 package com.example.weatherapp.data.repository;
 
+import android.app.Application;
 import android.location.Location;
 import android.util.Log;
 
@@ -11,7 +12,9 @@ import com.example.weatherapp.data.data_source.remote.WeatherApi;
 
 import com.example.weatherapp.data.data_source.remote.WeatherDto;
 import com.example.weatherapp.domin.model.LocationEntity;
+import com.example.weatherapp.domin.util.CheckInternetConnection;
 import com.example.weatherapp.domin.util.Resource;
+import com.example.weatherapp.domin.util.Utility;
 import com.example.weatherapp.domin.weather.WeatherInfo;
 import com.example.weatherapp.domin.repository.Repository;
 
@@ -38,8 +41,9 @@ public class RepositoryImp implements Repository {
     }
     @Override
     public Resource<WeatherInfo> getWeatherData(double lat, double lng) {
-        Log.d("input", String.valueOf(lat) + lng);
+
         AtomicBoolean processed = new AtomicBoolean(true) ;
+
         try {
             HashMap<String,Resource<WeatherInfo>> resultResource = new HashMap<>();
             Call<WeatherDto> call = api.getWeatherData(lat, lng);

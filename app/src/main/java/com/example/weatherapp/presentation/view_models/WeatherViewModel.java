@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.weatherapp.domin.location.LocationTracker;
 import com.example.weatherapp.domin.repository.Repository;
+import com.example.weatherapp.domin.util.CheckInternetConnection;
 import com.example.weatherapp.domin.util.Resource;
 import com.example.weatherapp.domin.util.Utility;
 import com.example.weatherapp.domin.weather.WeatherInfo;
@@ -18,6 +19,7 @@ import com.example.weatherapp.presentation.WeatherState;
 import com.example.weatherapp.presentation.activities.StatisticsActivity;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -37,7 +39,8 @@ public class WeatherViewModel extends ViewModel {
         LOADING,
         DATA_ERROR,
         LOCATION_ERROR,
-        DATA_AVAILABLE
+        DATA_AVAILABLE,
+        INTERNET_CONNECTION_ERROR
     }
     public enum WeatherEvent {
         GET_LATEST_DATA,
@@ -55,6 +58,10 @@ public class WeatherViewModel extends ViewModel {
     }
 
     public void loadWeatherInfo(){
+        if (!CheckInternetConnection.checkInternetConnection(applicationContext)){
+            weatherUiState.postValue(WeatherUiState.INTERNET_CONNECTION_ERROR);
+            return;
+        }
         weatherUiState.postValue(WeatherUiState.LOADING);
         state.postValue(new WeatherState(null, null));
         backgroundExecutor.execute(new Runnable() {
@@ -87,8 +94,9 @@ public class WeatherViewModel extends ViewModel {
                             "Couldn't retrieve location. Make sure to grant permission and enable GPS."
                     ));
                     weatherUiState.postValue(WeatherUiState.LOCATION_ERROR);
-                    Log.d("success",state.toString());
                 }
+                Log.d("success",state.toString());
+                Log.d("success",weatherUiState.toString());
                 backgroundExecutor.shutdown();
             }
         });
@@ -102,7 +110,7 @@ public class WeatherViewModel extends ViewModel {
                 break;
             }
             case GET_LATEST_DATA: {
-                Toast.makeText(applicationContext,"refresh data",Toast.LENGTH_SHORT).show();
+                loadWeatherInfo();
                 break;
             }
         }

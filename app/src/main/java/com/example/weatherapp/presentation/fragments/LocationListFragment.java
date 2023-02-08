@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.weatherapp.databinding.FragmentLocationListBinding;
 import com.example.weatherapp.domin.adapters.LocationListAdapter;
@@ -69,6 +70,21 @@ public class LocationListFragment extends Fragment {
         binding.rvLocationList.setLayoutManager(new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.VERTICAL,false));
         binding.rvLocationList.setAdapter(adapter);
+        adapter.onClickListenerDelete(
+                new LocationListAdapter.OnClickListenerDelete() {
+
+            @Override
+            public void onClickDelete(int position) {
+                Toast.makeText(requireContext(), "Delete", Toast.LENGTH_SHORT).show();
+            }
+        });
+        adapter.onClickListenerSetCurrentLocation(
+                new LocationListAdapter.OnClickListenerSetCurrentLocation() {
+            @Override
+            public void onClickSetCurrentLocation(int position) {
+                Toast.makeText(requireContext(), "Location set as current location", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
     @Override
     public void onDestroy() {
