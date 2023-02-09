@@ -1,5 +1,7 @@
 package com.example.weatherapp.presentation.fragments;
 
+import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,19 +17,33 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.weatherapp.R;
+import com.example.weatherapp.databinding.DialogLayoutBinding;
 import com.example.weatherapp.databinding.FragmentLocationListBinding;
 import com.example.weatherapp.domin.adapters.LocationListAdapter;
 import com.example.weatherapp.domin.adapters.WeatherAdapter;
 import com.example.weatherapp.domin.model.LocationEntity;
+import com.example.weatherapp.domin.util.Utility;
 import com.example.weatherapp.presentation.view_models.LocationListViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 
 
+@AndroidEntryPoint
 public class LocationListFragment extends Fragment {
 
     private FragmentLocationListBinding binding;
     private LocationListViewModel viewModel;
+    @Inject
+    SharedPreferences sharedPref;
+
+    private int lastLocation = -1;
 
     public LocationListFragment(){
         // Required empty public constructor
@@ -66,7 +82,7 @@ public class LocationListFragment extends Fragment {
     }
     private void setupLocationListRv(List<LocationEntity> list){
         LocationListAdapter adapter = new LocationListAdapter(
-                list,requireContext());
+                list,requireContext(),sharedPref);
         binding.rvLocationList.setLayoutManager(new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.VERTICAL,false));
         binding.rvLocationList.setAdapter(adapter);
@@ -74,17 +90,63 @@ public class LocationListFragment extends Fragment {
                 new LocationListAdapter.OnClickListenerDelete() {
 
             @Override
-            public void onClickDelete(int position) {
-                Toast.makeText(requireContext(), "Delete", Toast.LENGTH_SHORT).show();
+            public void onClickDelete(LocationEntity location) {
+                showDialog(
+                        getResources().getString(R.string.delete_dialog_title),
+                        getResources().getString(R.string.delete_dialog_content),
+                        location
+                );
             }
         });
         adapter.onClickListenerSetCurrentLocation(
                 new LocationListAdapter.OnClickListenerSetCurrentLocation() {
             @Override
-            public void onClickSetCurrentLocation(int position) {
-                Toast.makeText(requireContext(), "Location set as current location", Toast.LENGTH_SHORT).show();
+            public void onClickSetCurrentLocation(LocationEntity location, int position) {
+                if(lastLocation == -1){
+                    for(int i = 0; i <list.size(); i++){
+                        if(sharedPref.getInt(Utility.CURRENT_LOCATION,-1) == list.get(i).id ){
+                            lastLocation = i;
+                            break;
+                        }
+                    }
+                }
+                viewModel.locationListEvent(
+                        LocationListViewModel.LocationListEvent.SET_AS_CURRENT_LOCATION,null,location);
+                Log.d("last0", String.valueOf(lastLocation));
+                Log.d("last1", String.valueOf(position));
+                adapter.notifyItemChanged(position);
+                adapter.notifyItemChanged(lastLocation);
+                lastLocation = position;
+
             }
         });
+    }
+    private void showDialog(String header,String content, LocationEntity location){
+        Dialog dialog = new Dialog(requireContext(), R.style.DialogTheme);
+        DialogLayoutBinding dialogBinding = DialogLayoutBinding.inflate(getLayoutInflater());
+        dialog.setContentView(dialogBinding.getRoot());
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialogBinding.tvContent.setText(content);
+        dialogBinding.tvHeader.setText(header);
+        dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.locationListEvent(
+                        LocationListViewModel.LocationListEvent.DELETE_LOCATION,null,location);
+                dialog.dismiss();
+            }
+
+        });
+        dialogBinding.btnNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+
     }
     @Override
     public void onDestroy() {

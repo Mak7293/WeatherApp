@@ -74,16 +74,11 @@ dependencies {
     // Kotlin Extensions and Coroutine support for Room
     implementation "androidx.room:room-ktx:2.5.0"
 
-    //RxJava
-    implementation "io.reactivex.rxjava3:rxjava:3.1.5"
-
-    //RxAndroid
-    implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
-
-    //rx to liveData
-    implementation 'androidx.lifecycle:lifecycle-reactivestreams:2.5.1'
-
     //Chart & Graph
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
+    //Data Store
+    implementation "androidx.datastore:datastore-preferences:1.0.0-alpha06"
+    // RxJava3 support
+    implementation "androidx.datastore:datastore-preferences-rxjava3:1.0.0-alpha06"
 }

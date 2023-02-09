@@ -38,7 +38,10 @@ import com.example.weatherapp.presentation.view_models.WeatherViewModel;
 import java.util.Map;
 import java.util.Objects;
 
+import dagger.hilt.android.AndroidEntryPoint;
 
+
+@AndroidEntryPoint
 public class WeatherFragment extends Fragment {
 
     private FragmentWeatherBinding binding;

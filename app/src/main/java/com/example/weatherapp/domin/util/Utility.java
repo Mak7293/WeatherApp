@@ -1,5 +1,8 @@
 package com.example.weatherapp.domin.util;
 
+import androidx.datastore.preferences.core.Preferences;
+import androidx.datastore.preferences.core.PreferencesKeys;
+
 public class Utility {
     public Utility(){
 
@@ -16,6 +19,8 @@ public class Utility {
     public static final String WIND_SPEED = "wind_speed";
     public static final String HUMIDITY = "humidity";
     public static final String WEATHER_STATE = "weather_state";
+    public static final String SHARED_PREF = "shared_pref";
+    public static final String CURRENT_LOCATION = "current_location";
 
 
 }

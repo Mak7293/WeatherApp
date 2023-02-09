@@ -1,35 +1,48 @@
 package com.example.weatherapp.domin.adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.weatherapp.R;
 import com.example.weatherapp.databinding.FragmentLocationListBinding;
 import com.example.weatherapp.databinding.LocationRvItemBinding;
 import com.example.weatherapp.databinding.WeatherRvItemBinding;
 import com.example.weatherapp.domin.model.LocationEntity;
+import com.example.weatherapp.domin.util.Utility;
 import com.example.weatherapp.domin.weather.WeatherData;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+
 public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapter.ViewHolder> {
     private List<LocationEntity> list;
     private Context context;
+    private int lastPosition;
 
+    private SharedPreferences sharedPref;
 
-    public LocationListAdapter(List<LocationEntity> list, Context context){
+    public LocationListAdapter(List<LocationEntity> list, Context context,SharedPreferences sharedPref){
         this.list = list;
         this.context = context;
+        this.sharedPref =sharedPref;
     }
     public interface OnClickListenerDelete{
-        void onClickDelete(int position);
+        void onClickDelete(LocationEntity location);
     }
     public interface OnClickListenerSetCurrentLocation{
-        void onClickSetCurrentLocation(int position);
+        void onClickSetCurrentLocation(LocationEntity location,int position);
     }
     OnClickListenerDelete onClickListenerDelete;
     OnClickListenerSetCurrentLocation onClickListenerSetCurrentLocation;
@@ -60,19 +73,26 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         holder.binding.tvProvinceName.setText("Province Name:" + location.province);
         holder.binding.tvCountryName.setText("Country Name:" + location.country);
         holder.binding.tvLocality.setText("Locality Name:" + location.locality);
-
+        lastPosition = sharedPref.getInt(Utility.CURRENT_LOCATION,-1);
+        if (location.id == sharedPref.getInt(Utility.CURRENT_LOCATION,-1)){
+            holder.binding.mainLayout.setBackground(ContextCompat.getDrawable(
+                    context, R.drawable.location_rv_item_selected_background));
+        }else {
+            holder.binding.mainLayout.setBackground(ContextCompat.getDrawable(
+                    context, R.drawable.location_rv_item_background));
+        }
         holder.binding.btnDeleteLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClickListenerDelete.onClickDelete(holder.getAdapterPosition());
+                onClickListenerDelete.onClickDelete(location);
             }
         });
         holder.binding.btnSetAsCurrentLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onClickListenerSetCurrentLocation
-                        .onClickSetCurrentLocation(getItemViewType(holder.getAdapterPosition()));
-            }
+                        .onClickSetCurrentLocation(location, holder.getAdapterPosition());
+            };
         });
 
     }

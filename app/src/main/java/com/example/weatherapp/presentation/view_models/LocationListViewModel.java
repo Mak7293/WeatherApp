@@ -1,22 +1,16 @@
 package com.example.weatherapp.presentation.view_models;
 
 import android.app.Application;
-import android.util.Log;
+import android.content.SharedPreferences;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
-
-import com.example.weatherapp.domin.adapters.LocationListAdapter;
 import com.example.weatherapp.domin.model.LocationEntity;
 import com.example.weatherapp.domin.repository.Repository;
 import com.example.weatherapp.domin.util.MaterialBottomSheet;
-
+import com.example.weatherapp.domin.util.Utility;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -30,21 +24,25 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class LocationListViewModel extends ViewModel {
     Application applicationContext;
     Repository repository;
+
+    SharedPreferences sharedPref;
     private final ScheduledExecutorService backgroundExecutor =
-            Executors.newSingleThreadScheduledExecutor();
-    private final ScheduledExecutorService backgroundExecutor_one =
             Executors.newSingleThreadScheduledExecutor();
     @Inject
     public LocationListViewModel(
             Application applicationContext,
-            Repository repository
+            Repository repository,
+            SharedPreferences sharedPref
     ){
         this.applicationContext = applicationContext;
         this.repository = repository;
+        this.sharedPref = sharedPref;
     }
     public enum LocationListEvent{
         SHOW_BOTTOM_SHEET,
-        SAVE_LOCATION
+        SAVE_LOCATION,
+        SET_AS_CURRENT_LOCATION,
+        DELETE_LOCATION
     }
     public void locationListEvent(
             LocationListEvent event,
@@ -59,6 +57,14 @@ public class LocationListViewModel extends ViewModel {
             }
             case SAVE_LOCATION: {
                 saveLocationToDatabase(location);
+                break;
+            }
+            case SET_AS_CURRENT_LOCATION: {
+                saveLocationToDataStore(location.id);
+                break;
+            }
+            case DELETE_LOCATION: {
+                deleteLocationInDatabase(location);
                 break;
             }
         }
@@ -80,9 +86,22 @@ public class LocationListViewModel extends ViewModel {
                                 "Location Saved", Toast.LENGTH_SHORT).show();
                     }
                 });
-                backgroundExecutor.shutdown();
             }
         });
+    }
+    private void saveLocationToDataStore(int id){
+        sharedPref.edit().putInt(Utility.CURRENT_LOCATION,id).apply();
+
+    }
+    private void deleteLocationInDatabase(LocationEntity location){
+        backgroundExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                repository.deleteLocation(location);
+            }
+
+        });
+
     }
     public LiveData<List<LocationEntity>> getAllData(){
         return repository.getAllLocation();
@@ -91,6 +110,6 @@ public class LocationListViewModel extends ViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        backgroundExecutor_one.shutdown();
+        backgroundExecutor.shutdown();
     }
 }

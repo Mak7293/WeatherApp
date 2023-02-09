@@ -6,4 +6,6 @@
     <string name="all_time_location_permission">Please allow Access location to this app for taking your locale location.</string>
     <string name="activate_permission">Activate Permission</string>
     <string name="negative">i don\'t want activate permission</string>
+    <string name="delete_dialog_title">Delete Location</string>
+    <string name="delete_dialog_content">Are you sure you want delete this Location?</string>
 </resources>
