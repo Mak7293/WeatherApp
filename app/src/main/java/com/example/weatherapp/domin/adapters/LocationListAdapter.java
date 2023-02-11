@@ -29,7 +29,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapter.ViewHolder> {
     private List<LocationEntity> list;
     private Context context;
-    private int lastPosition;
 
     private SharedPreferences sharedPref;
 
@@ -73,7 +72,6 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         holder.binding.tvProvinceName.setText("Province Name:" + location.province);
         holder.binding.tvCountryName.setText("Country Name:" + location.country);
         holder.binding.tvLocality.setText("Locality Name:" + location.locality);
-        lastPosition = sharedPref.getInt(Utility.CURRENT_LOCATION,-1);
         if (location.id == sharedPref.getInt(Utility.CURRENT_LOCATION,-1)){
             holder.binding.mainLayout.setBackground(ContextCompat.getDrawable(
                     context, R.drawable.location_rv_item_selected_background));

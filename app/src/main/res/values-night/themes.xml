@@ -11,11 +11,81 @@
         <item name="colorOnSecondary">@color/black</item>
         <item name="android:textAllCaps">false</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">@color/dark_green_2</item>
         <!-- Customize your theme here. -->
+    </style>
+    <style name="splash_screen_theme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_image_night</item>
+        <item name="android:statusBarColor">@color/dark_custom_1</item>
+    </style>
+    <style name="view_pager_item_text_appearance">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/dark_green_8</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/regular</item>
+    </style>
+    <style name="CustomBottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/CustomBottomSheet</item>
+    </style>
+
+
+    <style name="CustomBottomSheet" parent="Widget.MaterialComponents.BottomSheet">
+        <item name="shapeAppearanceOverlay">@style/CustomShapeAppearanceBottomSheetDialog</item>
+        <item name="backgroundTint">@color/dark_green_8</item>
+    </style>
+
+    <style name="CustomShapeAppearanceBottomSheetDialog" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">20dp</item>
+        <item name="cornerSizeTopLeft">20dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+
     </style>
     <style name="DialogTheme" parent="Theme.MaterialComponents.Light.Dialog.MinWidth">
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowMinWidthMinor">90%</item>
+    </style>
+    <!-- __________________customTheme__________________ -->
+    <style name="toolbar_main_activity" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/dark_green_2</item>
+    </style>
+    <style name="radio_button" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:background">@drawable/drawable_unit_tab_selector_night</item>
+        <item name="android:textColor">@drawable/drawable_units_tab_color_selector_night</item>
+    </style>
+    <style name="view_pager_main_background" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:background">@color/dark_green_1</item>
+    </style>
+    <style name="tab_layout_main_background" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:background">@color/dark_green_2</item>
+        <item name="tabSelectedTextColor">@color/dark_green_8</item>
+        <item name="tabTextColor">@color/tab_inactive_text_color_night</item>
+        <item name="tabIndicatorColor">@android:color/holo_red_light</item>
+    </style>
+    <style name="weather_fragment_main_layout_background" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:background">@drawable/weather_background_night</item>
+    </style>
+    <style name="general_text_view" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:textColor">@color/dark_green_8</item>
+    </style>
+    <style name="general_text_view_reverse" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:textColor">@color/dark_green_0</item>
+    </style>
+    <style name="image_view_tint" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:tint">@color/dark_green_8</item>
+    </style>
+    <style name="image_view_tint_reverse" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:tint">@color/dark_green_0</item>
+    </style>
+    <style name="weather_fragment_top_left_corner_bottom_background" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:background">@drawable/light_button_background</item>
+    </style>
+    <style name="weather_fragment_go_to_forecast_activity" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:background">@drawable/light_button_background</item>
+        <item name="android:textColor">@color/dark_green_1</item>
+    </style>
+    <style name="weather_fragment_cardview_host_rv" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="cardBackgroundColor">@color/dark_green_2</item>
     </style>
 </resources>

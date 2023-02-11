@@ -88,14 +88,22 @@ public class LocationListFragment extends Fragment {
         binding.rvLocationList.setAdapter(adapter);
         adapter.onClickListenerDelete(
                 new LocationListAdapter.OnClickListenerDelete() {
-
             @Override
             public void onClickDelete(LocationEntity location) {
-                showDialog(
-                        getResources().getString(R.string.delete_dialog_title),
-                        getResources().getString(R.string.delete_dialog_content),
-                        location
-                );
+                if (sharedPref.getInt(Utility.CURRENT_LOCATION,-1) == location.id){
+                    sharedPref.edit().putInt(Utility.CURRENT_LOCATION,Utility.LOCALE_LOCATION_ID).apply();
+                    showDialog(
+                            getResources().getString(R.string.delete_dialog_title),
+                            getResources().getString(R.string.delete_dialog_content),
+                            location
+                    );
+                }else {
+                    showDialog(
+                            getResources().getString(R.string.delete_dialog_title),
+                            getResources().getString(R.string.delete_dialog_content),
+                            location
+                    );
+                }
             }
         });
         adapter.onClickListenerSetCurrentLocation(
@@ -152,6 +160,5 @@ public class LocationListFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         binding = null;
-        Log.d("destroy","location");
     }
 }

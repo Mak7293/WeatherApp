@@ -129,4 +129,8 @@ public class RepositoryImp implements Repository {
     public void deleteLocation(LocationEntity location) {
         dao.deleteLocation(location);
     }
+    @Override
+    public LocationEntity getLocation(int id) {
+        return dao.getLocation(id);
+    }
 }

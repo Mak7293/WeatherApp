@@ -8,6 +8,7 @@
         android:color="@color/dark_green_6"
         />
     <stroke
+        android:width="0.75dp"
         android:color="@color/dark_green_1"/>
 
 </shape>

@@ -11,8 +11,8 @@ import java.util.List;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
-    List<Fragment> fragmentList;
-    FragmentManager supportFragmentManager;
+    private List<Fragment> fragmentList;
+    private FragmentManager supportFragmentManager;
 
     public ViewPagerAdapter(List<Fragment> fragmentList, FragmentManager supportFragmentManager){
         super(supportFragmentManager);

@@ -13,4 +13,6 @@ public interface Repository {
     abstract LiveData<List<LocationEntity>> getAllLocation();
     abstract void insertLocation(LocationEntity location);
     abstract void deleteLocation(LocationEntity location);
+
+    abstract LocationEntity getLocation(int id);
 }

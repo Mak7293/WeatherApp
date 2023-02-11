@@ -18,9 +18,14 @@ public class Utility {
     public static final String PRESSURE = "pressure";
     public static final String WIND_SPEED = "wind_speed";
     public static final String HUMIDITY = "humidity";
-    public static final String WEATHER_STATE = "weather_state";
+    public static final int LOCALE_LOCATION_ID = -2;
     public static final String SHARED_PREF = "shared_pref";
     public static final String CURRENT_LOCATION = "current_location";
+    public static final String THEME_KEY = "theme_key";
+    public static final String THEME_DAY = "theme_day";
+    public static final String THEME_NIGHT = "theme_night";
+    public static final String THEME_DEFAULT = "theme_default";
+
 
 
 }

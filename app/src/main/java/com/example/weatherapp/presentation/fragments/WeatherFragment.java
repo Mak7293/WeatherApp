@@ -18,6 +18,7 @@ import androidx.transition.TransitionManager;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -32,11 +33,14 @@ import android.widget.Toast;
 import com.example.weatherapp.R;
 import com.example.weatherapp.databinding.FragmentWeatherBinding;
 import com.example.weatherapp.domin.adapters.WeatherAdapter;
+import com.example.weatherapp.domin.model.LocationEntity;
 import com.example.weatherapp.domin.util.Utility;
 import com.example.weatherapp.presentation.WeatherState;
 import com.example.weatherapp.presentation.view_models.WeatherViewModel;
 import java.util.Map;
 import java.util.Objects;
+
+import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -49,6 +53,8 @@ public class WeatherFragment extends Fragment {
     public WeatherFragment() {
         // Required empty public constructor
     }
+    @Inject
+    SharedPreferences sharedPref;
     private WeatherViewModel viewModel;
     public static WeatherState _weatherState;
     private ConstraintSet constraintSet = new ConstraintSet();
@@ -65,7 +71,7 @@ public class WeatherFragment extends Fragment {
                         Log.d("!!!!",permissionName);
                         if(isGranted){
                             if(Objects.equals(permissionName, Manifest.permission.ACCESS_FINE_LOCATION)){
-                                viewModel.loadWeatherInfo();
+                                viewModel.loadWeatherInfo(Utility.LOCALE_LOCATION_ID);
                             }
                         }else {
                             if(Objects.equals(permissionName, Manifest.permission.ACCESS_FINE_LOCATION)){
@@ -110,7 +116,12 @@ public class WeatherFragment extends Fragment {
                 viewModel.weatherEvent(WeatherViewModel.WeatherEvent.GET_LATEST_DATA);
             }
         });
-
+        binding.llGetUserLocaleLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getUserLocaleLocation();
+            }
+        });
     }
     private void observeLiveData(){
         viewModel.state.observe(getViewLifecycleOwner(), new Observer<WeatherState>() {
@@ -196,8 +207,6 @@ public class WeatherFragment extends Fragment {
         transition.setDuration(750L);
         TransitionManager.beginDelayedTransition(binding.rvTodayForecast, transition);
         binding.rvTodayForecast.requestLayout();
-
-
     }
     private void showWeatherData(){
         Log.d("invoke","222");
@@ -268,8 +277,21 @@ public class WeatherFragment extends Fragment {
         if(viewModel.weatherUiState.getValue() == WeatherViewModel.WeatherUiState.DATA_AVAILABLE){
             showWeatherData();
         }
+
+    }
+    private void getUserLocaleLocation(){
+        sharedPref.edit().putInt(Utility.CURRENT_LOCATION,Utility.LOCALE_LOCATION_ID).apply();
+        viewModel.loadWeatherInfo(Utility.LOCALE_LOCATION_ID);
     }
     private void setupWeatherUi(){
+        int locationId = viewModel.getCurrentLocationId();
+        Log.d("firstint", String.valueOf(locationId));
+        if(locationId == Utility.LOCALE_LOCATION_ID){
+            binding.tvLocation.setText("Local Location");
+        }else {
+            LocationEntity location = viewModel.getLocationById(locationId);
+            binding.tvLocation.setText(location.locality);
+        }
         binding.tvPressure.setText(_weatherState.weatherInfo.currentWeatherData.pressure+" hpa");
         binding.tvHumidity.setText(_weatherState.weatherInfo.currentWeatherData.humidity+ " %");
         binding.tvWind.setText(_weatherState.weatherInfo.currentWeatherData.windSpeed+ " km/hr");

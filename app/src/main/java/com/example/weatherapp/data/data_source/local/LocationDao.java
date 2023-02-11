@@ -24,4 +24,7 @@ public interface LocationDao {
     @Query("SELECT * FROM location_table")
     LiveData<List<LocationEntity>> fetchAllLocation();
 
+    @Query("SELECT * FROM location_table WHERE id=:id")
+    LocationEntity getLocation(int id);
+
 }
