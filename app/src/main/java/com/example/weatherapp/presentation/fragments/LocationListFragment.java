@@ -120,8 +120,6 @@ public class LocationListFragment extends Fragment {
                 }
                 viewModel.locationListEvent(
                         LocationListViewModel.LocationListEvent.SET_AS_CURRENT_LOCATION,null,location);
-                Log.d("last0", String.valueOf(lastLocation));
-                Log.d("last1", String.valueOf(position));
                 adapter.notifyItemChanged(position);
                 adapter.notifyItemChanged(lastLocation);
                 lastLocation = position;

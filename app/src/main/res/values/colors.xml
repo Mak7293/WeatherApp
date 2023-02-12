@@ -10,6 +10,7 @@
 
     <color name="tab_inactive_text_color_day">#6E6E6E</color>
     <color name="tab_inactive_text_color_night">#A3A3A3</color>
+    <color name="custom_yellow">#FFE81B</color>
 
     <!--myColorPallet1-->
     <color name="dark_green_0">#081c15</color>

@@ -3,6 +3,8 @@ package com.example.weatherapp.presentation.activities;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +13,7 @@ import android.view.View;
 
 import com.example.weatherapp.R;
 import com.example.weatherapp.databinding.ActivityStatisticsBinding;
+import com.example.weatherapp.domin.util.Theme;
 import com.example.weatherapp.domin.util.Utility;
 import com.example.weatherapp.domin.weather.WeatherData;
 import com.example.weatherapp.presentation.fragments.WeatherFragment;
@@ -38,7 +41,6 @@ public class StatisticsActivity extends AppCompatActivity {
         binding = ActivityStatisticsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dark_green_6));
         setUpToolbar();
         weatherDataPerDay = Objects.requireNonNull(WeatherFragment
                 ._weatherState.weatherInfo).weatherDataPerDay;
@@ -131,6 +133,8 @@ public class StatisticsActivity extends AppCompatActivity {
         return map;
     }
     private void setupLastDayChart(BarChart chart, String title,List<Pair<LocalDateTime,Float>> list){
+        int currentNightMode = getResources().getConfiguration()
+                .uiMode & Configuration.UI_MODE_NIGHT_MASK;
         List<BarEntry> barEntryList = new ArrayList<>();
         list.forEach((n) -> {
             barEntryList.add(new BarEntry(n.first.getHour(), n.second.floatValue()));
@@ -142,55 +146,50 @@ public class StatisticsActivity extends AppCompatActivity {
         xAxis.setGranularity(1.0f);
         xAxis.setLabelRotationAngle(30.0f);
         xAxis.setValueFormatter(xAxisFormatter);
-        xAxis.setTextColor(ContextCompat.getColor(this, R.color.dark_custom_0));
-        xAxis.setAxisLineColor(ContextCompat.getColor(this,R.color.dark_custom_1));
-        /*if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
-            this?.textColor = ContextCompat.getColor(requireContext(),R.color.dark_0)
-            this?.axisLineColor = ContextCompat.getColor(requireContext(),R.color.dark_1)
+        if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
+            xAxis.setTextColor(ContextCompat.getColor(this,R.color.dark_green_0));
+            xAxis.setAxisLineColor(ContextCompat.getColor(this,R.color.dark_green_1));
         }else{
-            this?.textColor = ContextCompat.getColor(requireContext(),R.color.dark_7)
-            this?.axisLineColor = ContextCompat.getColor(requireContext(),R.color.dark_5)
-        }*/
+            xAxis.setTextColor(ContextCompat.getColor(this,R.color.dark_green_6));
+            xAxis.setAxisLineColor(ContextCompat.getColor(this,R.color.dark_green_8));
+        }
 
         YAxis yAxisLeft = chart.getAxisLeft();
         yAxisLeft.setDrawGridLines(true);
-        yAxisLeft.setTextColor(ContextCompat.getColor(this,R.color.dark_custom_0));
-        yAxisLeft.setAxisLineColor(ContextCompat.getColor(this,R.color.dark_custom_1));
-        /*if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
-            this?.textColor = ContextCompat.getColor(requireContext(),R.color.dark_0)
-            this?.axisLineColor = ContextCompat.getColor(requireContext(),R.color.dark_1)
+        if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
+            yAxisLeft.setTextColor(ContextCompat.getColor(this,R.color.dark_green_0));
+            yAxisLeft.setAxisLineColor(ContextCompat.getColor(this,R.color.dark_green_1));
         }else{
-            this?.textColor = ContextCompat.getColor(requireContext(),R.color.dark_7)
-            this?.axisLineColor = ContextCompat.getColor(requireContext(),R.color.dark_5)
-        }*/
-
+            yAxisLeft.setTextColor(ContextCompat.getColor(this,R.color.dark_green_6));
+            yAxisLeft.setAxisLineColor(ContextCompat.getColor(this,R.color.dark_green_8));
+        }
         YAxis axisRight = chart.getAxisRight();
         axisRight.setAxisLineColor(Color.TRANSPARENT);
         axisRight.setTextColor(Color.TRANSPARENT);
         axisRight.setDrawGridLines(false);
 
         BarDataSet barDataSet = new BarDataSet(barEntryList,title);
-        barDataSet.setValueTextColor(Color.TRANSPARENT);
-        barDataSet.setValueTextSize(10.0f);
-        barDataSet.setColor(ContextCompat.getColor(this,R.color.dark_custom_1));
 
-        /*val barDataSet: BarDataSet = if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
-            BarDataSet(barEntryList, "Calories Burned").apply {
 
-                valueTextColor = ContextCompat.getColor(requireContext(),R.color.dark_0)
-                valueTextSize = 10.0f
-                color = ContextCompat.getColor(requireContext(),R.color.green_primary_color)
-            }
+        if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
+            barDataSet.setValueTextColor(Color.TRANSPARENT);
+            barDataSet.setValueTextSize(10.0f);
+            barDataSet.setColor(ContextCompat.getColor(this,R.color.dark_custom_1));
         }else{
-            BarDataSet(barEntryList, "Calories Burned").apply {
-                valueTextColor = ContextCompat.getColor(requireContext(),R.color.dark_7)
-                valueTextSize = 10.0f
-                color = ContextCompat.getColor(requireContext(),R.color.yellow_primary_color)
-            }
-        }*/
+            barDataSet.setValueTextColor(Color.TRANSPARENT);
+            barDataSet.setValueTextSize(10.0f);
+            barDataSet.setColor(ContextCompat.getColor(this,R.color.custom_yellow));
+        }
+        if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
+            chart.getLegend().setTextColor(ContextCompat.getColor(this,R.color.dark_green_1));
+        }else{
+            chart.getLegend().setTextColor(ContextCompat.getColor(this,R.color.dark_green_8));
+        }
         chart.setData(new BarData(barDataSet));
     }
     private void setup7daysChart(BarChart chart, String title,List<Pair<Integer,Float>> list){
+        int currentNightMode = getResources().getConfiguration()
+                .uiMode & Configuration.UI_MODE_NIGHT_MASK;
         List<BarEntry> barEntryList = new ArrayList<>();
         list.forEach((n) -> {
             barEntryList.add(new BarEntry(n.first, n.second.floatValue()));
@@ -202,55 +201,48 @@ public class StatisticsActivity extends AppCompatActivity {
         xAxis.setGranularity(1.0f);
         xAxis.setLabelRotationAngle(30.0f);
         xAxis.setValueFormatter(xAxisFormatter);
-        xAxis.setTextColor(ContextCompat.getColor(this, R.color.dark_custom_0));
-        xAxis.setAxisLineColor(ContextCompat.getColor(this,R.color.dark_custom_1));
-        /*if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
-            this?.textColor = ContextCompat.getColor(requireContext(),R.color.dark_0)
-            this?.axisLineColor = ContextCompat.getColor(requireContext(),R.color.dark_1)
+        if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
+            xAxis.setTextColor(ContextCompat.getColor(this,R.color.dark_green_0));
+            xAxis.setAxisLineColor(ContextCompat.getColor(this,R.color.dark_green_1));
         }else{
-            this?.textColor = ContextCompat.getColor(requireContext(),R.color.dark_7)
-            this?.axisLineColor = ContextCompat.getColor(requireContext(),R.color.dark_5)
-        }*/
+            xAxis.setTextColor(ContextCompat.getColor(this,R.color.dark_green_6));
+            xAxis.setAxisLineColor(ContextCompat.getColor(this,R.color.dark_green_8));
+        }
 
         YAxis yAxisLeft = chart.getAxisLeft();
         yAxisLeft.setDrawGridLines(true);
-        yAxisLeft.setTextColor(ContextCompat.getColor(this,R.color.dark_custom_0));
-        yAxisLeft.setAxisLineColor(ContextCompat.getColor(this,R.color.dark_custom_1));
-        /*if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
-            this?.textColor = ContextCompat.getColor(requireContext(),R.color.dark_0)
-            this?.axisLineColor = ContextCompat.getColor(requireContext(),R.color.dark_1)
+        if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
+            yAxisLeft.setTextColor(ContextCompat.getColor(this,R.color.dark_custom_0));
+            yAxisLeft.setAxisLineColor(ContextCompat.getColor(this,R.color.dark_custom_1));
         }else{
-            this?.textColor = ContextCompat.getColor(requireContext(),R.color.dark_7)
-            this?.axisLineColor = ContextCompat.getColor(requireContext(),R.color.dark_5)
-        }*/
-
+            yAxisLeft.setTextColor(ContextCompat.getColor(this,R.color.dark_green_6));
+            yAxisLeft.setAxisLineColor(ContextCompat.getColor(this,R.color.dark_green_8));
+        }
         YAxis axisRight = chart.getAxisRight();
         axisRight.setAxisLineColor(Color.TRANSPARENT);
         axisRight.setTextColor(Color.TRANSPARENT);
         axisRight.setDrawGridLines(false);
 
         BarDataSet barDataSet = new BarDataSet(barEntryList,title);
-        barDataSet.setValueTextColor(Color.TRANSPARENT);
-        barDataSet.setValueTextSize(10.0f);
-        barDataSet.setColor(ContextCompat.getColor(this,R.color.dark_custom_1));
 
-        /*val barDataSet: BarDataSet = if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
-            BarDataSet(barEntryList, "Calories Burned").apply {
+        if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
+            barDataSet.setValueTextColor(Color.TRANSPARENT);
+            barDataSet.setValueTextSize(10.0f);
+            barDataSet.setColor(ContextCompat.getColor(this,R.color.dark_custom_1));
 
-                valueTextColor = ContextCompat.getColor(requireContext(),R.color.dark_0)
-                valueTextSize = 10.0f
-                color = ContextCompat.getColor(requireContext(),R.color.green_primary_color)
-            }
         }else{
-            BarDataSet(barEntryList, "Calories Burned").apply {
-                valueTextColor = ContextCompat.getColor(requireContext(),R.color.dark_7)
-                valueTextSize = 10.0f
-                color = ContextCompat.getColor(requireContext(),R.color.yellow_primary_color)
-            }
-        }*/
+            barDataSet.setValueTextColor(Color.TRANSPARENT);
+            barDataSet.setValueTextSize(10.0f);
+            barDataSet.setColor(ContextCompat.getColor(this,R.color.custom_yellow));
+        }
+        if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
+            chart.getLegend().setTextColor(ContextCompat.getColor(this,R.color.dark_green_1));
+        }else{
+            chart.getLegend().setTextColor(ContextCompat.getColor(this,R.color.dark_green_8));
+        }
         chart.setData(new BarData(barDataSet));
     }
-    class DayAxisValueFormatter extends ValueFormatter {
+    static class DayAxisValueFormatter extends ValueFormatter {
         List<Pair<LocalDateTime,Float>> list = new ArrayList<>();
         public DayAxisValueFormatter(List<Pair<LocalDateTime,Float>> list){
             this.list = list;
@@ -262,7 +254,7 @@ public class StatisticsActivity extends AppCompatActivity {
             return result ;
         }
     }
-    class WeekAxisValueFormatter extends ValueFormatter {
+    static class WeekAxisValueFormatter extends ValueFormatter {
         List<Pair<Integer,Float>> list = new ArrayList<>();
         public WeekAxisValueFormatter(List<Pair<Integer,Float>> list){
             this.list = list;
@@ -278,7 +270,6 @@ public class StatisticsActivity extends AppCompatActivity {
             }
         }
     }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();

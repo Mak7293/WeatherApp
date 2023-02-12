@@ -54,6 +54,7 @@ public class MaterialBottomSheet extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 if(!binding.etLocation.getText().toString().isEmpty()){
+                    binding.progressBarLoading.setVisibility(View.VISIBLE);
                     searchLocation(binding.etLocation.getText().toString());
                 }else {
                     Toast.makeText(context,"Please Enter location",Toast.LENGTH_SHORT).show();
@@ -71,9 +72,15 @@ public class MaterialBottomSheet extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 if (!address.isEmpty()){
+                    String locality = "";
+                    if(address.get(0).getLocality() == null) {
+                        locality = Objects.requireNonNull(binding.etLocation.getText()).toString();
+                    }else {
+                        locality = address.get(0).getLocality();
+                    }
                     LocationEntity location = new LocationEntity(
                             0,
-                            address.get(0).getLocality(),
+                            locality,
                             address.get(0).getAdminArea(),
                             address.get(0).getCountryName(),
                             address.get(0).getLatitude(),
@@ -114,6 +121,7 @@ public class MaterialBottomSheet extends BottomSheetDialogFragment {
 
     }
     public void setupBottomSheetCard(Address address){
+        binding.progressBarLoading.setVisibility(View.GONE);
         binding.llResult.setVisibility(View.VISIBLE);
         String locality = "";
         if(address.getLocality() == null) {

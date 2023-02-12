@@ -13,11 +13,11 @@
         android:layout_gravity="top"
         android:id="@+id/child"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        app:behavior_peekHeight="275dp">
+        app:behavior_peekHeight="300dp">
         <LinearLayout
             android:id="@+id/ll_et_search_location"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
             android:layout_marginHorizontal="5dp"
@@ -26,16 +26,16 @@
                 android:id="@+id/tf_location"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="5dp"
-                android:background="@android:color/transparent">
+                style="@style/bottom_sheet_text_field_text_color">
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/et_location"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="55dp"
+                    style="@style/bottom_sheet_edit_text_text_color"
                     android:fontFamily="@font/regular"
                     android:hint="Search your location"
-                    android:layout_gravity="bottom"
                     tools:ignore="SpeakableTextPresentCheck" />
             </com.google.android.material.textfield.TextInputLayout>
             <ImageButton
@@ -43,9 +43,8 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:background="@drawable/rounded_background"
-                android:src="@drawable/ic_search"
-                app:tint="@color/dark_green_8" />
+                style ="@style/image_button_tint"
+                android:src="@drawable/ic_search" />
         </LinearLayout>
         <LinearLayout
             android:id="@+id/ll_result"
@@ -172,6 +171,19 @@
                     android:gravity="start"  />
             </LinearLayout>
         </LinearLayout>
+        <ProgressBar
+            android:id="@+id/progress_bar_loading"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:theme="@style/progress_bar_overlay"
+            android:layout_marginEnd="15dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ll_et_search_location"
+            app:layout_constraintBottom_toTopOf="@id/btn_save_to_database" />
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_cancel"
             android:layout_width="100dp"

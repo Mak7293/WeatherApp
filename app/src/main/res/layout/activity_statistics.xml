@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/dark_green_8"
+    android:theme="@style/view_pager_main_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.activities.StatisticsActivity">
@@ -11,14 +11,15 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/dark_green_6"
-        app:navigationIcon="@drawable/ic_custom_back_button"
+        style="@style/static_activity_toolbar"
         app:layout_constraintTop_toTopOf="parent">
         <TextView
             android:id="@+id/toolbar_tv"
+            android:background="@android:color/transparent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fontFamily="@font/semi_bold"
+            android:theme="@style/general_text_view"
             android:textSize="18sp"
             android:text="Weather Statistics"/>
     </androidx.appcompat.widget.Toolbar>
@@ -37,7 +38,7 @@
                 android:gravity="start"
                 android:text="Daily Forecast"
                 android:textSize="20sp"
-                android:textColor="@color/dark_green_1"
+                android:theme="@style/general_text_view"
                 android:fontFamily="@font/semi_bold"/>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/chart_layout_temperature"
@@ -109,7 +110,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1.5dp"
                 app:dividerColor="@color/dark_green_3"/>
             <TextView
                 android:layout_width="match_parent"
@@ -117,7 +118,7 @@
                 android:gravity="start"
                 android:text="7 days Forecast"
                 android:textSize="20sp"
-                android:textColor="@color/dark_green_1"
+                android:theme="@style/general_text_view"
                 android:fontFamily="@font/semi_bold"/>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/chart_layout_temperature_7days"
@@ -191,7 +192,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"/>
         </LinearLayout>
-
     </ScrollView>
 
 

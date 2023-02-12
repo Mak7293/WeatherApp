@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.WeatherApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
+        <item name="colorPrimary">#FFE81C</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
@@ -13,6 +13,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/dark_green_2</item>
         <!-- Customize your theme here. -->
+        <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialog</item>
     </style>
     <style name="splash_screen_theme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_image_night</item>
@@ -27,20 +28,16 @@
     <style name="CustomBottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/CustomBottomSheet</item>
     </style>
-
-
     <style name="CustomBottomSheet" parent="Widget.MaterialComponents.BottomSheet">
         <item name="shapeAppearanceOverlay">@style/CustomShapeAppearanceBottomSheetDialog</item>
-        <item name="backgroundTint">@color/dark_green_8</item>
+        <item name="backgroundTint">@color/dark_green_2</item>
     </style>
-
     <style name="CustomShapeAppearanceBottomSheetDialog" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSizeTopRight">20dp</item>
         <item name="cornerSizeTopLeft">20dp</item>
         <item name="cornerSizeBottomRight">0dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
-
     </style>
     <style name="DialogTheme" parent="Theme.MaterialComponents.Light.Dialog.MinWidth">
         <item name="android:windowMinWidthMajor">90%</item>
@@ -87,5 +84,36 @@
     </style>
     <style name="weather_fragment_cardview_host_rv" parent="ThemeOverlay.MaterialComponents.Dark">
         <item name="cardBackgroundColor">@color/dark_green_2</item>
+    </style>
+    <style name="location_list_fragment_fab_overlay" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:backgroundTint">@color/dark_green_8</item>
+        <item name="android:tint">@color/dark_green_1</item>
+    </style>
+    <style name="weather_rv_item_background" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:background">@drawable/weather_rv_item_background_night</item>
+    </style>
+    <style name="location_rv_item_background" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:background">@drawable/location_rv_item_background_night</item>
+    </style>
+    <style name="progress_bar_overlay" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:indeterminateTint">@color/dark_green_8</item>
+    </style>
+    <style name="image_button_tint" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:background">@drawable/rounded_background_night</item>
+        <item name="android:tint">@color/dark_green_1</item>
+    </style>
+    <style name="bottom_sheet_text_field_text_color" parent="Base.Widget.MaterialComponents.TextInputLayout">
+        <item name="materialThemeOverlay">
+            @style/ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox
+        </item>
+        <item name="boxCollapsedPaddingTop">0dp</item>
+        <item name="android:textColorHint">#FFE81C</item>
+    </style>
+    <style name="bottom_sheet_edit_text_text_color" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:textColor">@color/dark_green_7</item>
+    </style>
+    <style name="static_activity_toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/dark_green_2</item>
+        <item name="navigationIcon">@drawable/ic_custom_back_button_night</item>
     </style>
 </resources>

@@ -8,20 +8,22 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/weather_rv_item_background"
+        android:theme="@style/weather_rv_item_background"
         android:orientation="vertical">
         <TextView
             android:id="@+id/tv_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="@color/dark_green_0"
+            android:background="@android:color/transparent"
+            android:theme="@style/general_text_view"
             android:fontFamily="@font/regular"
             android:text="00:00"/>
         <ImageView
             android:id="@+id/iv_weather_state"
             tools:src="@drawable/ic_rain"
             android:paddingHorizontal="3dp"
+            android:background="@android:color/transparent"
             android:layout_width="match_parent"
             android:layout_height="60dp"/>
         <TextView
@@ -29,9 +31,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="@color/dark_green_0"
+            android:background="@android:color/transparent"
+            android:theme="@style/general_text_view"
             android:fontFamily="@font/semi_bold"
             android:text="0.0°C"/>
-
     </LinearLayout>
 </FrameLayout>

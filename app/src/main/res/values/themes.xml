@@ -92,5 +92,36 @@
     <style name="weather_fragment_cardview_host_rv" parent="ThemeOverlay.MaterialComponents.Light">
         <item name="cardBackgroundColor">@color/dark_green_6</item>
     </style>
+    <style name="location_list_fragment_fab_overlay" parent="ThemeOverlay.MaterialComponents.Light">
+        <item name="android:backgroundTint">@color/dark_green_1</item>
+        <item name="android:tint">@color/dark_green_8</item>
+    </style>
+    <style name="weather_rv_item_background" parent="ThemeOverlay.MaterialComponents.Light">
+        <item name="android:background">@drawable/weather_rv_item_background_day</item>
+    </style>
+    <style name="location_rv_item_background" parent="ThemeOverlay.MaterialComponents.Light">
+        <item name="android:background">@drawable/location_rv_item_background_day</item>
+    </style>
+    <style name="progress_bar_overlay" parent="ThemeOverlay.MaterialComponents.Light">
+        <item name="android:indeterminateTint">@color/dark_green_1</item>
+    </style>
+    <style name="image_button_tint" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:background">@drawable/rounded_background_day</item>
+        <item name="android:tint">@color/dark_green_8</item>
+    </style>
+    <style name="bottom_sheet_text_field_text_color" parent="Base.Widget.MaterialComponents.TextInputLayout">
+        <item name="materialThemeOverlay">
+            @style/ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox
+        </item>
+        <item name="boxCollapsedPaddingTop">0dp</item>
+        <item name="android:textColorHint">@color/dark_custom_0</item>
+    </style>
+    <style name="bottom_sheet_edit_text_text_color" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:textColor">@color/dark_green_0</item>
+    </style>
+    <style name="static_activity_toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/dark_green_6</item>
+        <item name="navigationIcon">@drawable/ic_custom_back_button_day</item>
+    </style>
 
 </resources>
