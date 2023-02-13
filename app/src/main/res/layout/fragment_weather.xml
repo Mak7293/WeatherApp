@@ -77,12 +77,12 @@
                 android:padding="5dp"
                 android:gravity="center">
                 <ImageView
-                    android:src="@drawable/ic_clock"
+                    android:src="@drawable/ic_date"
                     android:padding="2dp"
                     android:background="@android:color/transparent"
                     android:theme="@style/image_view_tint"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_marginEnd="10dp"/>
                 <TextView
                     android:id="@+id/tv_last_update"
@@ -94,6 +94,32 @@
                     android:fontFamily="@font/regular"
                     android:theme="@style/general_text_view"/>
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@android:color/transparent"
+                android:padding="5dp"
+                android:gravity="center">
+                <ImageView
+                    android:src="@drawable/ic_time"
+                    android:padding="2dp"
+                    android:background="@android:color/transparent"
+                    android:theme="@style/image_view_tint"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="10dp"/>
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:text="Last Time"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/regular"
+                    android:theme="@style/general_text_view"/>
+            </LinearLayout>
+
         </LinearLayout>
         <LinearLayout
             android:id="@+id/ll_weather_temperature_state"

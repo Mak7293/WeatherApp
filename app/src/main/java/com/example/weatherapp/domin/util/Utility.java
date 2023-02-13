@@ -1,7 +1,20 @@
 package com.example.weatherapp.domin.util;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
+import android.util.Log;
+
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.content.ContextCompat;
 import androidx.datastore.preferences.core.Preferences;
 import androidx.datastore.preferences.core.PreferencesKeys;
+
+import java.util.Map;
+import java.util.Objects;
 
 public class Utility {
     public Utility(){
@@ -25,7 +38,6 @@ public class Utility {
     public static final String THEME_DAY = "theme_day";
     public static final String THEME_NIGHT = "theme_night";
     public static final String THEME_DEFAULT = "theme_default";
-
 
 
 }

@@ -10,6 +10,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -51,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
         currentTheme = sharedPref.getString(Utility.THEME_KEY,Utility.THEME_DEFAULT);
         Theme.setTheme(currentTheme,sharedPref);
         themeTypeChecked();
-
         viewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
         _locationId = viewModel.getCurrentLocationId();
         setupViewPager(binding.tabViewpager);

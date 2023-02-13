@@ -13,7 +13,6 @@ import android.view.View;
 
 import com.example.weatherapp.R;
 import com.example.weatherapp.databinding.ActivityStatisticsBinding;
-import com.example.weatherapp.domin.util.Theme;
 import com.example.weatherapp.domin.util.Utility;
 import com.example.weatherapp.domin.weather.WeatherData;
 import com.example.weatherapp.presentation.fragments.WeatherFragment;

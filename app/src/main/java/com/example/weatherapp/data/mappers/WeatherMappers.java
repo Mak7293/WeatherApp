@@ -58,15 +58,15 @@ public class WeatherMappers {
         if(now.getMinute() < 30 ) {
             hour = now.getHour();
         } else {
-            hour = now.getHour();
+            hour = now.getHour()+1;
         }
         WeatherData currentWeatherData =  new WeatherData(
-                currentWeatherDataList.get(0).time.withHour(hour),
-                currentWeatherDataList.get(0).temperatureCelsius,
-                currentWeatherDataList.get(0).pressure,
-                currentWeatherDataList.get(0).windSpeed,
-                currentWeatherDataList.get(0).humidity,
-                currentWeatherDataList.get(0).weatherType
+                currentWeatherDataList.get(hour).time,
+                currentWeatherDataList.get(hour).temperatureCelsius,
+                currentWeatherDataList.get(hour).pressure,
+                currentWeatherDataList.get(hour).windSpeed,
+                currentWeatherDataList.get(hour).humidity,
+                currentWeatherDataList.get(hour).weatherType
         );
         return new WeatherInfo(weatherDataMap,currentWeatherData);
     }

@@ -51,14 +51,14 @@ public class WeatherFragment extends Fragment {
     private FragmentWeatherBinding binding;
 
     public WeatherFragment() {
-        // Required empty public constructor
+
     }
     @Inject
     SharedPreferences sharedPref;
     private WeatherViewModel viewModel;
     public static WeatherState _weatherState;
     private ConstraintSet constraintSet = new ConstraintSet();
-    private ActivityResultLauncher<String[]> permissionLauncher = registerForActivityResult(
+    public ActivityResultLauncher<String[]> permissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestMultiplePermissions()
             ,new ActivityResultCallback<Map<String, Boolean>>() {
                 @Override
@@ -71,7 +71,10 @@ public class WeatherFragment extends Fragment {
                         Log.d("!!!!",permissionName);
                         if(isGranted){
                             if(Objects.equals(permissionName, Manifest.permission.ACCESS_FINE_LOCATION)){
-                                viewModel.loadWeatherInfo(Utility.LOCALE_LOCATION_ID);
+                                if(viewModel.isFirstTime){
+                                    viewModel.loadWeatherInfo(Utility.LOCALE_LOCATION_ID);
+                                }
+                                viewModel.isFirstTime = false;
                             }
                         }else {
                             if(Objects.equals(permissionName, Manifest.permission.ACCESS_FINE_LOCATION)){
@@ -82,7 +85,6 @@ public class WeatherFragment extends Fragment {
                     });
                 }
             });
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -292,9 +294,9 @@ public class WeatherFragment extends Fragment {
             LocationEntity location = viewModel.getLocationById(locationId);
             binding.tvLocation.setText(location.locality);
         }
-        binding.tvPressure.setText(_weatherState.weatherInfo.currentWeatherData.pressure+" hpa");
-        binding.tvHumidity.setText(_weatherState.weatherInfo.currentWeatherData.humidity+ " %");
-        binding.tvWind.setText(_weatherState.weatherInfo.currentWeatherData.windSpeed+ " km/hr");
+        binding.tvPressure.setText(_weatherState.weatherInfo.currentWeatherData.pressure +" hpa");
+        binding.tvHumidity.setText(_weatherState.weatherInfo.currentWeatherData.humidity + " %");
+        binding.tvWind.setText(_weatherState.weatherInfo.currentWeatherData.windSpeed + " km/hr");
         binding.tvWeatherState.setText(
                 _weatherState.weatherInfo.currentWeatherData.weatherType.weatherDesc
         );
@@ -305,6 +307,7 @@ public class WeatherFragment extends Fragment {
         binding.tvWeatherTemperature.setText(
                 _weatherState.weatherInfo.currentWeatherData.temperatureCelsius + " °C");
         binding.tvLastUpdate.setText(generateCurrentTime());
+        binding.tvTime.setText(_weatherState.weatherInfo.currentWeatherData.time.toLocalTime().toString());
     }
     private String generateCurrentTime(){
         String year = String.valueOf(_weatherState.weatherInfo.currentWeatherData.time.getYear());

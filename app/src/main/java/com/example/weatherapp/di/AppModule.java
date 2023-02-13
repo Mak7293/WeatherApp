@@ -4,6 +4,7 @@ package com.example.weatherapp.di;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.datastore.core.DataStore;
@@ -11,6 +12,7 @@ import androidx.datastore.preferences.core.Preferences;
 import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder;
 import androidx.datastore.rxjava3.RxDataStore;
 import androidx.datastore.rxjava3.RxDataStoreBuilder;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.room.Room;
 
 import com.example.weatherapp.data.data_source.local.LocationDatabase;
@@ -18,6 +20,7 @@ import com.example.weatherapp.data.data_source.remote.WeatherApi;
 import com.example.weatherapp.data.repository.RepositoryImp;
 import com.example.weatherapp.domin.repository.Repository;
 import com.example.weatherapp.domin.util.Utility;
+import com.example.weatherapp.presentation.view_models.WeatherViewModel;
 import com.google.android.gms.common.internal.Constants;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -26,6 +29,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
+import dagger.hilt.android.qualifiers.ActivityContext;
 import dagger.hilt.components.SingletonComponent;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -75,7 +79,6 @@ public class AppModule {
                 db.locationDao()
         );
     }
-
     @Provides
     @Singleton
     SharedPreferences privateSharedPreferences(Application app) {

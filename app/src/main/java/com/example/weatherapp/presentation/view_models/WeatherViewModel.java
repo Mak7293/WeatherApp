@@ -20,7 +20,10 @@ import com.example.weatherapp.domin.util.Utility;
 import com.example.weatherapp.domin.weather.WeatherInfo;
 import com.example.weatherapp.presentation.WeatherState;
 import com.example.weatherapp.presentation.activities.StatisticsActivity;
+import com.example.weatherapp.presentation.fragments.WeatherFragment;
 
+import java.io.IOException;
+import java.nio.channels.Channel;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.Executors;
@@ -37,6 +40,8 @@ public class WeatherViewModel extends ViewModel {
     private final LocationTracker locationTracker;
     private final Application applicationContext;
     private final SharedPreferences sharedPref;
+    public boolean isFirstTime = true;
+
     public MutableLiveData<WeatherState> state = new MutableLiveData<WeatherState>();
     public MutableLiveData<WeatherUiState> weatherUiState = new MutableLiveData<WeatherUiState>();
     private final ScheduledExecutorService backgroundExecutor =
@@ -64,6 +69,7 @@ public class WeatherViewModel extends ViewModel {
         this.applicationContext = applicationContext;
         this.sharedPref = sharedPref;
     }
+
 
     public void loadWeatherInfo(int id) {
         if (!CheckInternetConnection.checkInternetConnection(applicationContext)){
