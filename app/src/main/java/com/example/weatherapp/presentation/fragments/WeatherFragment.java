@@ -19,6 +19,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -34,15 +35,25 @@ import com.example.weatherapp.R;
 import com.example.weatherapp.databinding.FragmentWeatherBinding;
 import com.example.weatherapp.domin.adapters.WeatherAdapter;
 import com.example.weatherapp.domin.model.LocationEntity;
+import com.example.weatherapp.domin.util.TapTargetView;
 import com.example.weatherapp.domin.util.Utility;
 import com.example.weatherapp.presentation.WeatherState;
+import com.example.weatherapp.presentation.activities.MainActivity;
 import com.example.weatherapp.presentation.view_models.WeatherViewModel;
+import com.getkeepsafe.taptargetview.TapTarget;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import hilt_aggregated_deps._com_example_weatherapp_presentation_view_models_LocationListViewModel_HiltModules_BindsModule;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 
 @AndroidEntryPoint
@@ -124,6 +135,14 @@ public class WeatherFragment extends Fragment {
                 getUserLocaleLocation();
             }
         });
+
+    }
+    public void weatherFragmentTapTargetView(){
+        List<View> view1 = new ArrayList<>();
+        view1.add(binding.llGetLatestData);
+        view1.add(binding.tvGoToWeeklyForecast);
+        view1.add(binding.llGetUserLocaleLocation);
+        TapTargetView.weatherFragmentTapTargetView(requireActivity(),view1);
     }
     private void observeLiveData(){
         viewModel.state.observe(getViewLifecycleOwner(), new Observer<WeatherState>() {
@@ -166,6 +185,15 @@ public class WeatherFragment extends Fragment {
                         showErrorMessage(Utility.ERROR_INTERNET_CONNECTION);
                         break;
                     }
+                }
+            }
+        });
+        MainActivity.menuAction.observe(getViewLifecycleOwner(),new Observer<String>(){
+            @Override
+            public void onChanged(String s) {
+                if(Objects.equals(s, Utility.WEATHER_FRAGMENT)){
+                    weatherFragmentTapTargetView();
+                    MainActivity.menuAction.postValue("");
                 }
             }
         });

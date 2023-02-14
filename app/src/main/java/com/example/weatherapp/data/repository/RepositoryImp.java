@@ -1,7 +1,5 @@
 package com.example.weatherapp.data.repository;
 
-import android.app.Application;
-import android.location.Location;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -12,10 +10,8 @@ import com.example.weatherapp.data.data_source.remote.WeatherApi;
 
 import com.example.weatherapp.data.data_source.remote.WeatherDto;
 import com.example.weatherapp.domin.model.LocationEntity;
-import com.example.weatherapp.domin.util.CheckInternetConnection;
 import com.example.weatherapp.domin.util.Resource;
-import com.example.weatherapp.domin.util.Utility;
-import com.example.weatherapp.domin.weather.WeatherInfo;
+import com.example.weatherapp.data.repository.weather.WeatherInfo;
 import com.example.weatherapp.domin.repository.Repository;
 
 import java.util.HashMap;

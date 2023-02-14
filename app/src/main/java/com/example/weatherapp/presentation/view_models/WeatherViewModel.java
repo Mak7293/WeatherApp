@@ -5,7 +5,6 @@ import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
@@ -17,22 +16,17 @@ import com.example.weatherapp.domin.repository.Repository;
 import com.example.weatherapp.domin.util.CheckInternetConnection;
 import com.example.weatherapp.domin.util.Resource;
 import com.example.weatherapp.domin.util.Utility;
-import com.example.weatherapp.domin.weather.WeatherInfo;
+import com.example.weatherapp.data.repository.weather.WeatherInfo;
 import com.example.weatherapp.presentation.WeatherState;
 import com.example.weatherapp.presentation.activities.StatisticsActivity;
-import com.example.weatherapp.presentation.fragments.WeatherFragment;
 
-import java.io.IOException;
-import java.nio.channels.Channel;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import okhttp3.internal.Util;
 
 @HiltViewModel
 public class WeatherViewModel extends ViewModel {
@@ -69,8 +63,6 @@ public class WeatherViewModel extends ViewModel {
         this.applicationContext = applicationContext;
         this.sharedPref = sharedPref;
     }
-
-
     public void loadWeatherInfo(int id) {
         if (!CheckInternetConnection.checkInternetConnection(applicationContext)){
             weatherUiState.postValue(WeatherUiState.INTERNET_CONNECTION_ERROR);

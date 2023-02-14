@@ -1,19 +1,25 @@
 package com.example.weatherapp.presentation.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.example.weatherapp.R;
 import com.example.weatherapp.domin.adapters.ViewPagerAdapter;
@@ -37,9 +43,15 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private WeatherViewModel viewModel;
     private int _locationId;
+    private Menu menu;
     @Inject
     SharedPreferences sharedPref;
-    String currentTheme;
+    private String currentTheme;
+    public static Rect rgThemeRectangle = new Rect();
+    public static View view;
+
+
+    public static MutableLiveData<String> menuAction = new MutableLiveData<String>();
 
     @SuppressLint("ResourceType")
     @Override
@@ -48,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
         setTheme(R.style.Theme_WeatherApp);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        view = binding.rgTheme;
 
         currentTheme = sharedPref.getString(Utility.THEME_KEY,Utility.THEME_DEFAULT);
         Theme.setTheme(currentTheme,sharedPref);
@@ -69,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
-
             @Override
             public void onPageScrollStateChanged(int state) {
                 // we don't need this methode
@@ -94,6 +107,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        setToolbar();
+    }
+
+
+    private void setToolbar(){
+        setSupportActionBar(binding.toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("");
     }
     private void themeTypeChecked(){
         switch (currentTheme) {
@@ -118,14 +139,48 @@ public class MainActivity extends AppCompatActivity {
             _locationId = locationId;
         }
     }
-
     private void setupViewPager(ViewPager viewPager){
         List<Fragment> fragmentList = new ArrayList<Fragment>();
         fragmentList.add(new WeatherFragment());
         fragmentList.add(new LocationListFragment());
-
         ViewPagerAdapter adapter = new ViewPagerAdapter(fragmentList, getSupportFragmentManager());
         viewPager.setAdapter(adapter);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menue_information,menu);
+        this.menu = menu;
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        int currentNightMode = getResources().getConfiguration()
+                .uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
+            menu.getItem(0).getIcon().setTint(
+                    ContextCompat.getColor(this,R.color.dark_custom_1));
+        }else{
+            menu.getItem(0).getIcon().setTint(
+                    ContextCompat.getColor(this,R.color.dark_custom_4));
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.information) {
+            switch (binding.tabTableLayout.getSelectedTabPosition()){
+                case 0:{
+                    menuAction.postValue(Utility.WEATHER_FRAGMENT);
+                    break;
+                }
+                case 1:{
+                    menuAction.postValue(Utility.LOCATION_LIST_FRAGMENT);
+                    break;
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

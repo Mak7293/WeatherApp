@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 
 import com.example.weatherapp.domin.model.LocationEntity;
 import com.example.weatherapp.domin.util.Resource;
-import com.example.weatherapp.domin.weather.WeatherInfo;
+import com.example.weatherapp.data.repository.weather.WeatherInfo;
 
 import java.util.List;
 

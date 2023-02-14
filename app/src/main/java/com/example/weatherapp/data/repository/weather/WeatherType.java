@@ -1,4 +1,4 @@
-package com.example.weatherapp.domin.weather;
+package com.example.weatherapp.data.repository.weather;
 
 import androidx.annotation.DrawableRes;
 

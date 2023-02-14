@@ -15,15 +15,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.weatherapp.R;
 import com.example.weatherapp.databinding.DialogLayoutBinding;
 import com.example.weatherapp.databinding.FragmentLocationListBinding;
+import com.example.weatherapp.databinding.LocationRvItemBinding;
 import com.example.weatherapp.domin.adapters.LocationListAdapter;
-import com.example.weatherapp.domin.adapters.WeatherAdapter;
 import com.example.weatherapp.domin.model.LocationEntity;
+import com.example.weatherapp.domin.util.TapTargetView;
 import com.example.weatherapp.domin.util.Utility;
+import com.example.weatherapp.presentation.activities.MainActivity;
 import com.example.weatherapp.presentation.view_models.LocationListViewModel;
 
 import java.util.ArrayList;
@@ -44,6 +45,8 @@ public class LocationListFragment extends Fragment {
     SharedPreferences sharedPref;
 
     private int lastLocation = -1;
+    int locationSize = 0;
+    LocationListAdapter adapter;
 
     public LocationListFragment(){
         // Required empty public constructor
@@ -68,20 +71,45 @@ public class LocationListFragment extends Fragment {
                         LocationListViewModel.LocationListEvent.SHOW_BOTTOM_SHEET,requireActivity(),null);
             }
         });
-        observeViewModelLiveData();
+        observeLiveData();
     }
-    private void observeViewModelLiveData(){
+    public void locationFragmentTapTargetView(){
+        if(locationSize == 0){
+            List<View> view1 = new ArrayList<>();
+            view1.add(binding.fabAddLocation);
+            TapTargetView.locationFragmentTapTargetViewEmptyList(requireActivity(),view1);
+        }else {
+            List<View> view1 = new ArrayList<>();
+            view1.add(adapter.btnSetAsCurrentLocation);
+            view1.add(binding.fabAddLocation);
+            view1.add(adapter.btnDeleteLocation);
+            TapTargetView.locationFragmentTapTargetView(requireActivity(),view1);
+        }
+
+    }
+    private void observeLiveData(){
         Log.d("location!!","!!!!!");
         viewModel.getAllData().observe(getViewLifecycleOwner(), new Observer<List<LocationEntity>>() {
             @Override
             public void onChanged(List<LocationEntity> locationEntities) {
                 Log.d("location!!",locationEntities.toString());
                 setupLocationListRv(locationEntities);
+                locationSize = locationEntities.size();
+
+            }
+        });
+        MainActivity.menuAction.observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                if(Objects.equals(s, Utility.LOCATION_LIST_FRAGMENT)){
+                    locationFragmentTapTargetView();
+                    MainActivity.menuAction.postValue("");
+                }
             }
         });
     }
     private void setupLocationListRv(List<LocationEntity> list){
-        LocationListAdapter adapter = new LocationListAdapter(
+        adapter = new LocationListAdapter(
                 list,requireContext(),sharedPref);
         binding.rvLocationList.setLayoutManager(new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.VERTICAL,false));

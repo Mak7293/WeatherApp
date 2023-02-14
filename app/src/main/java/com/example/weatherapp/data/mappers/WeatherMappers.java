@@ -4,9 +4,9 @@ import android.util.Log;
 
 import com.example.weatherapp.data.data_source.remote.WeatherDataDto;
 import com.example.weatherapp.data.data_source.remote.WeatherDto;
-import com.example.weatherapp.domin.weather.WeatherData;
-import com.example.weatherapp.domin.weather.WeatherInfo;
-import com.example.weatherapp.domin.weather.WeatherType;
+import com.example.weatherapp.data.repository.weather.WeatherData;
+import com.example.weatherapp.data.repository.weather.WeatherInfo;
+import com.example.weatherapp.data.repository.weather.WeatherType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -58,7 +58,11 @@ public class WeatherMappers {
         if(now.getMinute() < 30 ) {
             hour = now.getHour();
         } else {
-            hour = now.getHour()+1;
+            if(now.getHour() == 23){
+                hour = now.getHour();
+            }else {
+                hour = now.getHour()+1;
+            }
         }
         WeatherData currentWeatherData =  new WeatherData(
                 currentWeatherDataList.get(hour).time,

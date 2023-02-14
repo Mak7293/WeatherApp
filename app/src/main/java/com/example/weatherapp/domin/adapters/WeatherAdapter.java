@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weatherapp.databinding.WeatherRvItemBinding;
-import com.example.weatherapp.domin.weather.WeatherData;
+import com.example.weatherapp.data.repository.weather.WeatherData;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;

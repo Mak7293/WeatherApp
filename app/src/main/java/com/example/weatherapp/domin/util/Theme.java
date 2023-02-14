@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Build;
 import android.util.Log;
 
@@ -46,50 +47,23 @@ public class Theme {
             LocationEntity location,
             LocationRvItemBinding binding
     ){
+        int currentNightMode = context.getResources().getConfiguration()
+                .uiMode & Configuration.UI_MODE_NIGHT_MASK;
         if (location.id == sharedPref.getInt(Utility.CURRENT_LOCATION,-1)){
-            Log.d("!!!!",sharedPref.getString(Utility.THEME_KEY, Utility.THEME_DEFAULT));
-            if(sharedPref.getString(Utility.THEME_KEY, Utility.THEME_DEFAULT).equals(Utility.THEME_DAY)){
+            if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
                 binding.mainLayout.setBackground(ContextCompat.getDrawable(
                         context, R.drawable.location_rv_item_selected_background_day));
-            }else if(sharedPref.getString(Utility.THEME_KEY, Utility.THEME_DEFAULT).equals(Utility.THEME_NIGHT)){
+            }else{
                 binding.mainLayout.setBackground(ContextCompat.getDrawable(
                         context, R.drawable.location_rv_item_selected_background_night));
-            }else if(sharedPref.getString(Utility.THEME_KEY, Utility.THEME_DEFAULT).equals(Utility.THEME_DEFAULT)){
-                if(Build.VERSION.SDK_INT < Build.VERSION_CODES.Q){
-                    binding.mainLayout.setBackground(ContextCompat.getDrawable(
-                            context, R.drawable.location_rv_item_selected_background_day));
-                }else {
-                    int currentNightMode = context.getResources().getConfiguration().uiMode & UI_MODE_NIGHT_MASK;
-                    if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
-                        binding.mainLayout.setBackground(ContextCompat.getDrawable(
-                                context, R.drawable.location_rv_item_selected_background_day));
-                    }else if(currentNightMode == Configuration.UI_MODE_NIGHT_YES){
-                        binding.mainLayout.setBackground(ContextCompat.getDrawable(
-                                context, R.drawable.location_rv_item_selected_background_night));
-                    }
-                }
-            };
+            }
         }else {
-            if(sharedPref.getString(Utility.THEME_KEY, Utility.THEME_DEFAULT).equals(Utility.THEME_DAY)){
+            if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
                 binding.mainLayout.setBackground(ContextCompat.getDrawable(
                         context, R.drawable.location_rv_item_background_day));
-            }else if(sharedPref.getString(Utility.THEME_KEY, Utility.THEME_DEFAULT).equals(Utility.THEME_NIGHT)){
+            }else{
                 binding.mainLayout.setBackground(ContextCompat.getDrawable(
                         context, R.drawable.location_rv_item_background_night));
-            }else if(sharedPref.getString(Utility.THEME_KEY, Utility.THEME_DEFAULT).equals(Utility.THEME_DEFAULT)){
-                if(Build.VERSION.SDK_INT < Build.VERSION_CODES.Q){
-                    binding.mainLayout.setBackground(ContextCompat.getDrawable(
-                            context, R.drawable.location_rv_item_background_day));
-                }else {
-                    int currentNightMode = context.getResources().getConfiguration().uiMode & UI_MODE_NIGHT_MASK;
-                    if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
-                        binding.mainLayout.setBackground(ContextCompat.getDrawable(
-                                context, R.drawable.location_rv_item_background_day));
-                    }else if(currentNightMode == Configuration.UI_MODE_NIGHT_YES){
-                        binding.mainLayout.setBackground(ContextCompat.getDrawable(
-                                context, R.drawable.location_rv_item_background_night));
-                    }
-                }
             }
         }
     }

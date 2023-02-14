@@ -45,6 +45,9 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
+    // KeepSafe - TapTargetView github library
+    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.3'
+
     //Google Maps Location Services
     implementation 'com.google.android.gms:play-services-location:21.0.0'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
@@ -77,8 +80,7 @@ dependencies {
     //Chart & Graph
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
-    //Data Store
-    implementation "androidx.datastore:datastore-preferences:1.0.0-alpha06"
-    // RxJava3 support
-    implementation "androidx.datastore:datastore-preferences-rxjava3:1.0.0-alpha06"
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.5'
+
 }

@@ -2,7 +2,7 @@ package com.example.weatherapp.presentation;
 
 import androidx.annotation.Nullable;
 
-import com.example.weatherapp.domin.weather.WeatherInfo;
+import com.example.weatherapp.data.repository.weather.WeatherInfo;
 
 public class WeatherState {
     @Nullable

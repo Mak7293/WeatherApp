@@ -1,12 +1,7 @@
-package com.example.weatherapp.domin.weather;
+package com.example.weatherapp.data.repository.weather;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 

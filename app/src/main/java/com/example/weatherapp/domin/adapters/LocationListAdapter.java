@@ -26,6 +26,8 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
     private Context context;
 
     private SharedPreferences sharedPref;
+    public View btnSetAsCurrentLocation;
+    public View btnDeleteLocation;
 
     public LocationListAdapter(List<LocationEntity> list, Context context,SharedPreferences sharedPref){
         this.list = list;
@@ -51,6 +53,8 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         public ViewHolder(@NonNull LocationRvItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            btnDeleteLocation = binding.btnDeleteLocation;
+            btnSetAsCurrentLocation = binding.btnSetAsCurrentLocation;
         }
     }
 

@@ -14,7 +14,7 @@ import android.view.View;
 import com.example.weatherapp.R;
 import com.example.weatherapp.databinding.ActivityStatisticsBinding;
 import com.example.weatherapp.domin.util.Utility;
-import com.example.weatherapp.domin.weather.WeatherData;
+import com.example.weatherapp.data.repository.weather.WeatherData;
 import com.example.weatherapp.presentation.fragments.WeatherFragment;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
