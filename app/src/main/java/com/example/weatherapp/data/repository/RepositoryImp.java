@@ -1,5 +1,7 @@
 package com.example.weatherapp.data.repository;
 
+import android.content.SharedPreferences;
+import android.media.AudioRouting;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -13,9 +15,16 @@ import com.example.weatherapp.domin.model.LocationEntity;
 import com.example.weatherapp.domin.util.Resource;
 import com.example.weatherapp.data.repository.weather.WeatherInfo;
 import com.example.weatherapp.domin.repository.Repository;
+import com.example.weatherapp.domin.util.Utility;
+import com.example.weatherapp.domin.util.WeatherUiState;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.squareup.moshi.Moshi;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
@@ -25,15 +34,20 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RepositoryImp implements Repository {
-    WeatherApi api;
-    LocationDao dao;
+    private WeatherApi api;
+    private LocationDao dao;
+    private SharedPreferences sharedPref;
+    private final ScheduledExecutorService backgroundExecutor =
+            Executors.newSingleThreadScheduledExecutor();
     @Inject
     public RepositoryImp(
             WeatherApi api,
-            LocationDao dao
+            LocationDao dao,
+            SharedPreferences sharedPref
     ){
         this.api = api;
         this.dao = dao;
+        this.sharedPref = sharedPref;
     }
     @Override
     public Resource<WeatherInfo> getWeatherData(double lat, double lng) {
@@ -43,15 +57,41 @@ public class RepositoryImp implements Repository {
         try {
             HashMap<String,Resource<WeatherInfo>> resultResource = new HashMap<>();
             Call<WeatherDto> call = api.getWeatherData(lat, lng);
+            backgroundExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(3500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        backgroundExecutor.shutdown();
+                    }
+                    if(call.isExecuted()){
+                        call.cancel();
+                        Resource<WeatherInfo> resource = new Resource.Error(
+                                null,"Server is too busy, please try again.",
+                                WeatherUiState.ERROR_LONG_TIME_HTTP_REQUEST);
+                        resultResource.put("resource",resource);
+                        synchronized (processed) {
+                            processed.notify();
+                        }
+                    }
+                }
+            });
+
             call.enqueue(new Callback<WeatherDto>() {
                 @Override
                 public void onResponse(Call<WeatherDto> call, Response<WeatherDto> response) {
                     if (response.isSuccessful()){
                         Resource<WeatherInfo> resource= new Resource.Success(
                                 WeatherMappers.weatherDtoToWeatherInfo(response.body()),
-                                null
+                                null,
+                                WeatherUiState.DATA_AVAILABLE
                         );
                         Log.d("result0", resource.toString());
+                        String cashedWeatherForecast = new Gson().toJson(response.body());
+                        sharedPref.edit().putString(Utility.CASHED_WEATHER_FORECAST,
+                                cashedWeatherForecast).apply();
                         resultResource.put("resource",resource);
                         synchronized (processed) {
                             processed.notify();
@@ -63,7 +103,8 @@ public class RepositoryImp implements Repository {
                             case 400: {
                                 Log.e("Error 400", "Bad connection");
                                 Resource<WeatherInfo> resource = new Resource.Error(null,
-                                        "response isn't successfully");
+                                        "Http response isn't successfully form application server, please try again."
+                                        ,WeatherUiState.DATA_ERROR);
                                 resultResource.put("resource",resource);
                                 synchronized (processed) {
                                     processed.notify();
@@ -72,7 +113,8 @@ public class RepositoryImp implements Repository {
                             case 404: {
                                 Log.e("Error 404", "Not Found");
                                 Resource<WeatherInfo> resource = new Resource.Error(null,
-                                        "response isn't successfully");
+                                        "Http response isn't successfully form application server, please try again."
+                                        ,WeatherUiState.DATA_ERROR);
                                 resultResource.put("resource",resource);
                                 synchronized (processed) {
                                     processed.notify();
@@ -81,7 +123,8 @@ public class RepositoryImp implements Repository {
                             default: {
                                 Log.e("Error", "Generic Error");
                                 Resource<WeatherInfo> resource = new Resource.Error(null,
-                                        "response isn't successfully");
+                                        "Http response was not successfully received from the application server, please try again."
+                                        ,WeatherUiState.DATA_ERROR);
                                 resultResource.put("resource",resource);
                                 synchronized (processed) {
                                     processed.notify();
@@ -93,7 +136,7 @@ public class RepositoryImp implements Repository {
                 @Override
                 public void onFailure(Call<WeatherDto> call, Throwable t) {
                     Resource<WeatherInfo> resource = new Resource.Error(null,
-                            "fail to response from api");
+                            "Fail to response from api",WeatherUiState.DATA_ERROR);
                     Log.d("failure",t.toString());
                     resultResource.put("resource",resource);
                 }
@@ -104,13 +147,12 @@ public class RepositoryImp implements Repository {
             Log.d("result_", resultResource.values().toString());
             return resultResource.get("resource");
         }catch (Exception e){
-            Log.d("insideError",e.toString());
             e.printStackTrace();
             String message = e.getMessage();
             if(message == null){
-                message = "An unknown error occurred.";
+                message = "An unknown error occurred. Please try again later.";
             }
-            return new Resource.Error(null, message);
+            return new Resource.Error(null, message,WeatherUiState.DATA_ERROR);
         }
     }
     @Override

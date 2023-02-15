@@ -25,6 +25,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.gms.tasks.Task;
 import java.util.HashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.inject.Inject;
 
@@ -61,12 +63,27 @@ public class DefaultLocationTracker implements LocationTracker {
             return null;
         }
         @SuppressLint("MissingPermission")
+        /*Task<Location> locationTask = locationClient.getCurrentLocation(
+                Priority.PRIORITY_HIGH_ACCURACY, new CancellationToken() {
+                    @NonNull
+                    @Override
+                    public CancellationToken onCanceledRequested(@NonNull OnTokenCanceledListener onTokenCanceledListener) {
+
+                        return null;
+
+                    }
+                    @Override
+                    public boolean isCancellationRequested() {
+                        return false;
+                    }
+                });*/
         Task<Location> locationTask = locationClient.getCurrentLocation(
                 Priority.PRIORITY_HIGH_ACCURACY, new CancellationToken() {
                     @NonNull
                     @Override
                     public CancellationToken onCanceledRequested(@NonNull OnTokenCanceledListener onTokenCanceledListener) {
                         return null;
+
                     }
                     @Override
                     public boolean isCancellationRequested() {

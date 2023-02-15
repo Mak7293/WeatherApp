@@ -3,6 +3,7 @@ package com.example.weatherapp.presentation.activities;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -16,6 +17,7 @@ import com.example.weatherapp.databinding.ActivityStatisticsBinding;
 import com.example.weatherapp.domin.util.Utility;
 import com.example.weatherapp.data.repository.weather.WeatherData;
 import com.example.weatherapp.presentation.fragments.WeatherFragment;
+import com.example.weatherapp.presentation.view_models.WeatherViewModel;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -29,6 +31,11 @@ import java.util.List;
 import java.util.Objects;
 import com.github.mikephil.charting.charts.BarChart;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class StatisticsActivity extends AppCompatActivity {
 
     private ActivityStatisticsBinding binding;
@@ -39,10 +46,8 @@ public class StatisticsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityStatisticsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         setUpToolbar();
-        weatherDataPerDay = Objects.requireNonNull(WeatherFragment
-                ._weatherState.weatherInfo).weatherDataPerDay;
+        weatherDataPerDay = WeatherFragment.state.weatherInfo.weatherDataPerDay;
         setupLastDayChart(binding.chartTemperature, "Temperature°C",
                 lastDayChartData().get(Utility.TEMPERATURE));
         setupLastDayChart(binding.chartPressure,"Pressure hPa",

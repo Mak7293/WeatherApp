@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
     @Inject
     SharedPreferences sharedPref;
     private String currentTheme;
-    public static Rect rgThemeRectangle = new Rect();
     public static View view;
 
 
@@ -62,12 +61,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         view = binding.rgTheme;
-
         currentTheme = sharedPref.getString(Utility.THEME_KEY,Utility.THEME_DEFAULT);
         Theme.setTheme(currentTheme,sharedPref);
         themeTypeChecked();
-        viewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
-        _locationId = viewModel.getCurrentLocationId();
         setupViewPager(binding.tabViewpager);
         binding.tabTableLayout.setupWithViewPager(binding.tabViewpager);
         binding.tabViewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -182,5 +178,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

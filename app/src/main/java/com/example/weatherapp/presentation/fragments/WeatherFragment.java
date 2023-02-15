@@ -14,12 +14,10 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.transition.TransitionManager;
-
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -30,30 +28,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnticipateOvershootInterpolator;
 import android.widget.Toast;
-
 import com.example.weatherapp.R;
+import com.example.weatherapp.data.repository.weather.WeatherInfo;
 import com.example.weatherapp.databinding.FragmentWeatherBinding;
 import com.example.weatherapp.domin.adapters.WeatherAdapter;
 import com.example.weatherapp.domin.model.LocationEntity;
 import com.example.weatherapp.domin.util.TapTargetView;
 import com.example.weatherapp.domin.util.Utility;
+import com.example.weatherapp.domin.util.WeatherUiState;
 import com.example.weatherapp.presentation.WeatherState;
 import com.example.weatherapp.presentation.activities.MainActivity;
 import com.example.weatherapp.presentation.view_models.WeatherViewModel;
-import com.getkeepsafe.taptargetview.TapTarget;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
 import javax.inject.Inject;
-
 import dagger.hilt.android.AndroidEntryPoint;
-import hilt_aggregated_deps._com_example_weatherapp_presentation_view_models_LocationListViewModel_HiltModules_BindsModule;
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+
 
 
 @AndroidEntryPoint
@@ -67,7 +61,7 @@ public class WeatherFragment extends Fragment {
     @Inject
     SharedPreferences sharedPref;
     private WeatherViewModel viewModel;
-    public static WeatherState _weatherState;
+    public static WeatherState state;
     private ConstraintSet constraintSet = new ConstraintSet();
     public ActivityResultLauncher<String[]> permissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestMultiplePermissions()
@@ -77,15 +71,9 @@ public class WeatherFragment extends Fragment {
                     result.entrySet().forEach(it ->{
                         String permissionName = it.getKey();
                         boolean isGranted = it.getValue();
-                        Log.d("!!!!",result.toString());
-                        Log.d("!!!!", String.valueOf(isGranted));
-                        Log.d("!!!!",permissionName);
                         if(isGranted){
                             if(Objects.equals(permissionName, Manifest.permission.ACCESS_FINE_LOCATION)){
-                                if(viewModel.isFirstTime){
-                                    viewModel.loadWeatherInfo(Utility.LOCALE_LOCATION_ID);
-                                }
-                                viewModel.isFirstTime = false;
+                                checkUpdateInStartOfApp();
                             }
                         }else {
                             if(Objects.equals(permissionName, Manifest.permission.ACCESS_FINE_LOCATION)){
@@ -115,7 +103,7 @@ public class WeatherFragment extends Fragment {
         binding.tvGoToWeeklyForecast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(_weatherState.weatherInfo!=null){
+                if(state.weatherInfo!=null){
                     viewModel.weatherEvent(WeatherViewModel.WeatherEvent.DETAILS_FORECAST);
                 }else {
                     Toast.makeText(requireContext(), "no weather forecast available to show.", Toast.LENGTH_SHORT).show();
@@ -137,6 +125,29 @@ public class WeatherFragment extends Fragment {
         });
 
     }
+    private void checkUpdateInStartOfApp(){
+        boolean isCashedAvailable = viewModel.loadWeatherCashedWeatherData().first;
+        WeatherState weatherState = viewModel.loadWeatherCashedWeatherData().second;
+        LocalDateTime now = LocalDateTime.now();
+        if (isCashedAvailable){
+            if(now.getDayOfYear() ==
+                    weatherState.weatherInfo.currentWeatherData.time.getDayOfYear()){
+                viewModel.state.postValue(weatherState);
+            }else {
+                if(viewModel.isFirstTime){
+                    int locationId = viewModel.getCurrentLocationId();
+                    viewModel.loadWeatherInfo(locationId);
+                }
+                viewModel.isFirstTime = false;
+            }
+        }else {
+            if(viewModel.isFirstTime){
+                int locationId = viewModel.getCurrentLocationId();
+                viewModel.loadWeatherInfo(locationId);
+            }
+            viewModel.isFirstTime = false;
+        }
+    }
     public void weatherFragmentTapTargetView(){
         List<View> view1 = new ArrayList<>();
         view1.add(binding.llGetLatestData);
@@ -148,41 +159,48 @@ public class WeatherFragment extends Fragment {
         viewModel.state.observe(getViewLifecycleOwner(), new Observer<WeatherState>() {
             @Override
             public void onChanged(WeatherState weatherState) {
-                if(weatherState.weatherInfo != null){
-                    Log.d("observe", weatherState.weatherInfo.toString());
-                    _weatherState = weatherState;
-                    setupWeatherUi();
-                    setupWeatherRv();
-                }else{
-                    _weatherState = weatherState;
-                    Log.d("error","!!!");
-                }
-            }
-        });
-        viewModel.weatherUiState.observe(getViewLifecycleOwner(), new Observer<WeatherViewModel.WeatherUiState>(){
-            @Override
-            public void onChanged(WeatherViewModel.WeatherUiState weatherUiState) {
-                Log.d("weatherUiState",weatherUiState.toString());
-                switch (weatherUiState){
+                Log.d("observe", weatherState.toString());
+                state = weatherState;
+                switch (weatherState.state){
                     case LOADING: {
                         hideWeatherData();
                         break;
                     }
                     case DATA_AVAILABLE: {
+                        setupWeatherUi(weatherState);
+                        setupWeatherRv(weatherState);
                         showWeatherData();
                         break;
                     }
                     case DATA_ERROR: {
-                        showErrorMessage(Utility.ERROR_DATA);
+                        hideWeatherData();
+                        showErrorMessage(weatherState.error);
                         break;
                     }
                     case LOCATION_ERROR: {
-                        showErrorMessage(Utility.ERROR_LOCATION);
+                        hideWeatherData();
+                        showErrorMessage(weatherState.error);
                         break;
                     }
                     case INTERNET_CONNECTION_ERROR: {
                         hideWeatherData();
-                        showErrorMessage(Utility.ERROR_INTERNET_CONNECTION);
+                        showErrorMessage(weatherState.error);
+                        break;
+                    }
+                    case LOCATION_DISABLE:{
+                        hideWeatherData();
+                        showErrorMessage(weatherState.error);
+                        break;
+                    }
+                    case ERROR_LONG_TIME_HTTP_REQUEST:{
+                        hideWeatherData();
+                        showErrorMessage(weatherState.error);
+                        break;
+                    }
+                    case LOAD_CASHED_WEATHER_FORECAST:{
+                        setupWeatherUi(weatherState);
+                        setupWeatherRv(weatherState);
+                        showWeatherData();
                         break;
                     }
                 }
@@ -279,73 +297,54 @@ public class WeatherFragment extends Fragment {
         TransitionManager.beginDelayedTransition(binding.rvTodayForecast, transition);
         binding.rvTodayForecast.requestLayout();
     }
-    private void showErrorMessage(String errorType){
-        switch (errorType){
-            case Utility.ERROR_DATA:     {
-                binding.tvError.setVisibility(View.VISIBLE);
-                binding.progressBarLoading.setVisibility(View.GONE);
-                binding.tvError.setText("Can not download weather data form server. please try again later.");
-                break;
-            }
-            case Utility.ERROR_LOCATION: {
-                binding.tvError.setVisibility(View.VISIBLE);
-                binding.progressBarLoading.setVisibility(View.GONE);
-                binding.tvError.setText("Can not access to user location.");
-                break;
-            }
-            case Utility.ERROR_INTERNET_CONNECTION: {
-                binding.tvError.setVisibility(View.VISIBLE);
-                binding.progressBarLoading.setVisibility(View.GONE);
-                binding.tvError.setText("Your Internet is not connected.");
-                break;
-            }
-        }
+    private void showErrorMessage(String errorString){
+        binding.tvError.setVisibility(View.VISIBLE);
+        binding.progressBarLoading.setVisibility(View.GONE);
+        binding.tvError.setText(errorString);
     }
     @Override
     public void onResume() {
         super.onResume();
-        if(viewModel.weatherUiState.getValue() == WeatherViewModel.WeatherUiState.DATA_AVAILABLE){
+        if(viewModel.state.getValue().state == WeatherUiState.DATA_AVAILABLE){
             showWeatherData();
         }
 
     }
     private void getUserLocaleLocation(){
-        sharedPref.edit().putInt(Utility.CURRENT_LOCATION,Utility.LOCALE_LOCATION_ID).apply();
         viewModel.loadWeatherInfo(Utility.LOCALE_LOCATION_ID);
     }
-    private void setupWeatherUi(){
+    private void setupWeatherUi(WeatherState weatherState){
         int locationId = viewModel.getCurrentLocationId();
-        Log.d("firstint", String.valueOf(locationId));
         if(locationId == Utility.LOCALE_LOCATION_ID){
             binding.tvLocation.setText("Local Location");
         }else {
             LocationEntity location = viewModel.getLocationById(locationId);
             binding.tvLocation.setText(location.locality);
         }
-        binding.tvPressure.setText(_weatherState.weatherInfo.currentWeatherData.pressure +" hpa");
-        binding.tvHumidity.setText(_weatherState.weatherInfo.currentWeatherData.humidity + " %");
-        binding.tvWind.setText(_weatherState.weatherInfo.currentWeatherData.windSpeed + " km/hr");
+        binding.tvPressure.setText(weatherState.weatherInfo.currentWeatherData.pressure +" hpa");
+        binding.tvHumidity.setText(weatherState.weatherInfo.currentWeatherData.humidity + " %");
+        binding.tvWind.setText(weatherState.weatherInfo.currentWeatherData.windSpeed + " km/hr");
         binding.tvWeatherState.setText(
-                _weatherState.weatherInfo.currentWeatherData.weatherType.weatherDesc
+                weatherState.weatherInfo.currentWeatherData.weatherType.weatherDesc
         );
         binding.ivWeatherState.setImageDrawable(
                 ContextCompat.getDrawable(requireContext(),
-                        _weatherState.weatherInfo.currentWeatherData.weatherType.iconRes)
+                        weatherState.weatherInfo.currentWeatherData.weatherType.iconRes)
         );
         binding.tvWeatherTemperature.setText(
-                _weatherState.weatherInfo.currentWeatherData.temperatureCelsius + " °C");
-        binding.tvLastUpdate.setText(generateCurrentTime());
-        binding.tvTime.setText(_weatherState.weatherInfo.currentWeatherData.time.toLocalTime().toString());
+                weatherState.weatherInfo.currentWeatherData.temperatureCelsius + " °C");
+        binding.tvLastUpdate.setText(generateCurrentTime(viewModel.state.getValue()));
+        binding.tvTime.setText(weatherState.weatherInfo.currentWeatherData.time.toLocalTime().toString());
     }
-    private String generateCurrentTime(){
-        String year = String.valueOf(_weatherState.weatherInfo.currentWeatherData.time.getYear());
-        String month = String.valueOf(_weatherState.weatherInfo.currentWeatherData.time.getMonth());
-        String day = String.valueOf(_weatherState.weatherInfo.currentWeatherData.time.getDayOfMonth());
+    private String generateCurrentTime(WeatherState weatherState){
+        String year = String.valueOf(weatherState.weatherInfo.currentWeatherData.time.getYear());
+        String month = String.valueOf(weatherState.weatherInfo.currentWeatherData.time.getMonth());
+        String day = String.valueOf(weatherState.weatherInfo.currentWeatherData.time.getDayOfMonth());
         return day + "/" + month + "/" + year;
     }
-    private void setupWeatherRv(){
+    private void setupWeatherRv(WeatherState weatherState){
         WeatherAdapter adapter = new WeatherAdapter(
-                _weatherState.weatherInfo.weatherDataPerDay.get(0),requireContext());
+                weatherState.weatherInfo.weatherDataPerDay.get(0),requireContext());
         binding.rvTodayForecast.setLayoutManager(new LinearLayoutManager(requireContext(),
                 LinearLayoutManager.HORIZONTAL,false));
         binding.rvTodayForecast.setAdapter(adapter);
