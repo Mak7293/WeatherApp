@@ -20,11 +20,11 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name="com.example.weatherapp.presentation.activities.StatisticsActivity"
+            android:name="weather.soft918.weather_app.presentation.activities.StatisticsActivity"
             android:exported="false"
             android:theme="@style/Theme.WeatherApp"/>
         <activity
-            android:name="com.example.weatherapp.presentation.activities.MainActivity"
+            android:name="weather.soft918.weather_app.presentation.activities.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
