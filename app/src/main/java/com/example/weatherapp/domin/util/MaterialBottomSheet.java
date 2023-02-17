@@ -1,8 +1,12 @@
 package com.example.weatherapp.domin.util;
 
 import android.app.Application;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Address;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +14,14 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.example.weatherapp.R;
 import com.example.weatherapp.databinding.BottomSheetBinding;
 import com.example.weatherapp.domin.model.LocationEntity;
+import com.example.weatherapp.presentation.fragments.LocationListFragment;
 import com.example.weatherapp.presentation.view_models.LocationListViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import java.io.IOException;
@@ -29,7 +37,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class MaterialBottomSheet extends BottomSheetDialogFragment {
     @Inject
-    Application context;
+    Application application;
     private List<Address> address = new ArrayList<>();
     private LocationListViewModel viewModel;
     private final ScheduledExecutorService backgroundExecutor =
@@ -53,11 +61,15 @@ public class MaterialBottomSheet extends BottomSheetDialogFragment {
         binding.ibSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!CheckInternetConnection.checkInternetConnection(application)){
+                    Toast.makeText(application, "Please connect your device to internet.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if(!binding.etLocation.getText().toString().isEmpty()){
                     binding.progressBarLoading.setVisibility(View.VISIBLE);
                     searchLocation(binding.etLocation.getText().toString());
                 }else {
-                    Toast.makeText(context,"Please Enter location",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(application,"Please Enter location",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -72,25 +84,29 @@ public class MaterialBottomSheet extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 if (!address.isEmpty()){
-                    String locality = "";
-                    if(address.get(0).getLocality() == null) {
-                        locality = Objects.requireNonNull(binding.etLocation.getText()).toString();
+                    if(LocationListFragment.locationSize<150) {
+                        String locality = "";
+                        if(address.get(0).getLocality() == null) {
+                            locality = Objects.requireNonNull(binding.etLocation.getText()).toString();
+                        }else {
+                            locality = address.get(0).getLocality();
+                        }
+                        LocationEntity location = new LocationEntity(
+                                0,
+                                locality,
+                                address.get(0).getAdminArea(),
+                                address.get(0).getCountryName(),
+                                address.get(0).getLatitude(),
+                                address.get(0).getLongitude()
+                        );
+                        viewModel.locationListEvent(
+                                LocationListViewModel.LocationListEvent.SAVE_LOCATION,null,location);
+                        dismiss();
                     }else {
-                        locality = address.get(0).getLocality();
+                        alertDialogForMoreThan150EntriesInDatabase();
                     }
-                    LocationEntity location = new LocationEntity(
-                            0,
-                            locality,
-                            address.get(0).getAdminArea(),
-                            address.get(0).getCountryName(),
-                            address.get(0).getLatitude(),
-                            address.get(0).getLongitude()
-                    );
-                    viewModel.locationListEvent(
-                            LocationListViewModel.LocationListEvent.SAVE_LOCATION,null,location);
-                    dismiss();
                 }else {
-                    Toast.makeText(context,
+                    Toast.makeText(application,
                             "Please first search a location",Toast.LENGTH_SHORT).show();
                 }
 
@@ -99,12 +115,12 @@ public class MaterialBottomSheet extends BottomSheetDialogFragment {
         getDialog().setCancelable(false);
     }
     private void searchLocation(String location){
-        Executor mainExecutor = ContextCompat.getMainExecutor(context);
+        Executor mainExecutor = ContextCompat.getMainExecutor(application);
         backgroundExecutor.execute(new Runnable(){
             @Override
             public void run() {
                 try {
-                    address = new GeocoderNominatim(context).getFromLocationName(
+                    address = new GeocoderNominatim(application).getFromLocationName(
                             location,0);
                     Log.d("address",address.toString());
                     mainExecutor.execute(new Runnable() {
@@ -134,6 +150,22 @@ public class MaterialBottomSheet extends BottomSheetDialogFragment {
         binding.tvCountryName.setText(address.getCountryName());
         binding.tvLatitude.setText(String.valueOf((double) address.getLatitude()));
         binding.tvLongitude.setText(String.valueOf((double) address.getLongitude()));
+    }
+    private void alertDialogForMoreThan150EntriesInDatabase(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("You have added 150 locations so far!!!");
+        builder.setMessage(getResources().getString(R.string.alert_more_than_150_entries_in_database));
+        builder.setIcon(R.drawable.ic_alert);
+        builder.setPositiveButton("Ok",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create();
+        builder.setCancelable(false);
+        builder.show();
     }
 
 }

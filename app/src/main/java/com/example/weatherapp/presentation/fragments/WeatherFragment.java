@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import androidx.transition.ChangeBounds;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +69,7 @@ public class WeatherFragment extends Fragment {
             ,new ActivityResultCallback<Map<String, Boolean>>() {
                 @Override
                 public void onActivityResult(Map<String, Boolean> result) {
-                    result.entrySet().forEach(it ->{
+                    result.entrySet().forEach(it -> {
                         String permissionName = it.getKey();
                         boolean isGranted = it.getValue();
                         if(isGranted){
@@ -126,8 +127,9 @@ public class WeatherFragment extends Fragment {
 
     }
     private void checkUpdateInStartOfApp(){
-        boolean isCashedAvailable = viewModel.loadWeatherCashedWeatherData().first;
-        WeatherState weatherState = viewModel.loadWeatherCashedWeatherData().second;
+        Pair<Boolean,WeatherState> cash = viewModel.loadWeatherCashedWeatherData();
+        boolean isCashedAvailable = cash.first;
+        WeatherState weatherState = cash.second;
         LocalDateTime now = LocalDateTime.now();
         if (isCashedAvailable){
             if(now.getDayOfYear() ==

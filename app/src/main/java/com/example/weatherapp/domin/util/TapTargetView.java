@@ -131,7 +131,7 @@ public class TapTargetView {
                                 .descriptionTextColor(R.color.dark_green_0),
                         TapTarget.forView(view.get(2), "Delete Location",
                                         "You can delete this location if you don't want get" +
-                                                " weather forecast for this specific location")
+                                                " weather forecast for this specific location.")
                                 .dimColor(android.R.color.white)
                                 .outerCircleColor(R.color.dark_green_4)
                                 .targetCircleColor(R.color.custom_yellow)

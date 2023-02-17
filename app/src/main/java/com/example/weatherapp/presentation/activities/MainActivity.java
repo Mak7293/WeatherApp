@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
     private String currentTheme;
     public static View view;
 
-
     public static MutableLiveData<String> menuAction = new MutableLiveData<String>();
 
     @SuppressLint("ResourceType")
@@ -59,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
         setTheme(R.style.Theme_WeatherApp);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        viewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
+        _locationId = viewModel.getCurrentLocationId();
 
         view = binding.rgTheme;
         currentTheme = sharedPref.getString(Utility.THEME_KEY,Utility.THEME_DEFAULT);
@@ -129,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void updateWeatherData(){
+        Log.d("@@@",String.valueOf(viewModel.getCurrentLocationId()));
         int locationId = viewModel.getCurrentLocationId();
         if (locationId !=_locationId){
             viewModel.loadWeatherInfo(locationId);

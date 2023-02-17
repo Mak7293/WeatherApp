@@ -4,6 +4,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="all_time_location_permission">Please allow Access location to this app for taking your locale location.</string>
+    <string name="alert_more_than_150_entries_in_database">You have added 150 locations in your device database so far. you cannot add more than 150 entries in database.please delete some unuseful location.</string>
     <string name="activate_permission">Activate Permission</string>
     <string name="negative">i don\'t want activate permission</string>
     <string name="delete_dialog_title">Delete Location</string>

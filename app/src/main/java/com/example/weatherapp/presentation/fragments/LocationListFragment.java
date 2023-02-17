@@ -45,7 +45,7 @@ public class LocationListFragment extends Fragment {
     SharedPreferences sharedPref;
 
     private int lastLocation = -1;
-    int locationSize = 0;
+    public static int locationSize = 0;
     LocationListAdapter adapter;
 
     public LocationListFragment(){

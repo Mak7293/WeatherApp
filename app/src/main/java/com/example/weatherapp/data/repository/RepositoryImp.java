@@ -64,7 +64,6 @@ public class RepositoryImp implements Repository {
                         Thread.sleep(3500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                        backgroundExecutor.shutdown();
                     }
                     if(call.isExecuted()){
                         call.cancel();
@@ -153,6 +152,11 @@ public class RepositoryImp implements Repository {
                 message = "An unknown error occurred. Please try again later.";
             }
             return new Resource.Error(null, message,WeatherUiState.DATA_ERROR);
+        }
+    }
+    public void onDestroyRepositoryBackgroundThread(){
+        if (!backgroundExecutor.isShutdown()){
+            backgroundExecutor.shutdown();
         }
     }
     @Override

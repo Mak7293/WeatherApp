@@ -18,6 +18,7 @@ import com.example.weatherapp.domin.util.Utility;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.CancellationToken;
+import com.google.android.gms.tasks.CancellationTokenSource;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -63,33 +64,20 @@ public class DefaultLocationTracker implements LocationTracker {
             return null;
         }
         @SuppressLint("MissingPermission")
-        /*Task<Location> locationTask = locationClient.getCurrentLocation(
-                Priority.PRIORITY_HIGH_ACCURACY, new CancellationToken() {
-                    @NonNull
-                    @Override
-                    public CancellationToken onCanceledRequested(@NonNull OnTokenCanceledListener onTokenCanceledListener) {
-
-                        return null;
-
-                    }
-                    @Override
-                    public boolean isCancellationRequested() {
-                        return false;
-                    }
-                });*/
         Task<Location> locationTask = locationClient.getCurrentLocation(
-                Priority.PRIORITY_HIGH_ACCURACY, new CancellationToken() {
+                Priority.PRIORITY_HIGH_ACCURACY, new CancellationToken(){
                     @NonNull
                     @Override
                     public CancellationToken onCanceledRequested(@NonNull OnTokenCanceledListener onTokenCanceledListener) {
                         return null;
-
                     }
                     @Override
                     public boolean isCancellationRequested() {
                         return false;
                     }
                 });
+        /*CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        Task<Location> locationTask = locationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, cancellationTokenSource.getToken());*/
         HashMap<String,Double> location = new HashMap<>();
         AtomicBoolean processed = new AtomicBoolean(true);
         locationTask.addOnSuccessListener(new OnSuccessListener() {

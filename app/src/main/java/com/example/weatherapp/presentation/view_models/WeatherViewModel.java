@@ -29,7 +29,6 @@ import com.example.weatherapp.domin.util.WeatherUiState;
 import com.example.weatherapp.presentation.WeatherState;
 import com.example.weatherapp.presentation.activities.StatisticsActivity;
 import com.google.gson.Gson;
-
 import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -84,6 +83,7 @@ public class WeatherViewModel extends ViewModel {
                             location = locationTracker.getCurrentLocation();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
+                            Log.d("errorrrr",e.toString());
                         } finally {
                             Log.d("location", location.toString());
                         }
@@ -95,6 +95,8 @@ public class WeatherViewModel extends ViewModel {
                             if (result instanceof Resource.Success) {
                                 state.postValue(new WeatherState(result.data,
                                         null, result.state));
+                                sharedPref.edit().putInt(Utility.CURRENT_LOCATION,
+                                        Utility.LOCALE_LOCATION_ID).apply();
                             } else if (result instanceof Resource.Error) {
                                 state.postValue(new WeatherState(null,
                                         result.message, result.state));
@@ -102,14 +104,14 @@ public class WeatherViewModel extends ViewModel {
                         } else {
                             state.postValue(new WeatherState(
                                     null,
-                                    "Couldn't retrieve location. Make sure to grant permission and enable GPS.",
+                                    "Couldn't retrieve location. Make sure to grant permission and enable GPS." +
+                                            " Otherwise add your location in location list tab and set its as current location",
                                     WeatherUiState.LOCATION_ERROR
                             ));
                         }
                         Log.d("success", state.toString());
                     }
                 });
-                sharedPref.edit().putInt(Utility.CURRENT_LOCATION,Utility.LOCALE_LOCATION_ID).apply();
             }else if (id == Utility.LOCALE_LOCATION_ID && !isLocationEnabled()){
                 Toast.makeText(applicationContext, "Please Enable device location", Toast.LENGTH_SHORT).show();
                 state.postValue(new WeatherState(
@@ -117,8 +119,7 @@ public class WeatherViewModel extends ViewModel {
                         "Please Enable your device location.",
                         WeatherUiState.LOCATION_DISABLE
                 ));
-            }
-            else {
+            } else {
                 LocationEntity location = getLocationById(id);
                 HashMap<String, Double> finalLocation = new HashMap<>();
                 finalLocation.put(Utility.LATITUDE, location.latitude);
@@ -144,7 +145,7 @@ public class WeatherViewModel extends ViewModel {
                         } else {
                             state.postValue(new WeatherState(
                                     null,
-                                    "Couldn't retrieve location. Make sure to grant permission and enable GPS.",
+                                    "Couldn't retrieve location for this location.",
                                     WeatherUiState.LOCATION_ERROR
                             ));
                         }
@@ -225,5 +226,6 @@ public class WeatherViewModel extends ViewModel {
     protected void onCleared() {
         super.onCleared();
         backgroundExecutor.shutdown();
+        repository.onDestroyRepositoryBackgroundThread();
     }
 }
