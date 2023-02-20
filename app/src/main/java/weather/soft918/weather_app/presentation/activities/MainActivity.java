@@ -37,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private WeatherViewModel viewModel;
-    private int _locationId;
+
+    public static int _locationId;
     private Menu menu;
     @Inject
     SharedPreferences sharedPref;
@@ -75,6 +76,10 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 if (position == 0){
                     updateWeatherData();
+
+                }else if(position == 1 && viewModel.getCurrentLocationId() ==
+                        Utility.LOCALE_LOCATION_ID){
+                    LocationListFragment.popCurrentRecyclerViewItem();
                 }
 
             }

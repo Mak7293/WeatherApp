@@ -25,6 +25,7 @@ import weather.soft918.weather_app.domin.util.Utility;
 import weather.soft918.weather_app.data.repository.weather.WeatherInfo;
 import weather.soft918.weather_app.domin.util.WeatherUiState;
 import weather.soft918.weather_app.presentation.WeatherState;
+import weather.soft918.weather_app.presentation.activities.MainActivity;
 import weather.soft918.weather_app.presentation.activities.StatisticsActivity;
 import com.google.gson.Gson;
 import java.util.HashMap;
@@ -94,6 +95,7 @@ public class WeatherViewModel extends ViewModel {
                                         null, result.state));
                                 sharedPref.edit().putInt(Utility.CURRENT_LOCATION,
                                         Utility.LOCALE_LOCATION_ID).apply();
+                                MainActivity._locationId = Utility.LOCALE_LOCATION_ID;
                             } else if (result instanceof Resource.Error) {
                                 state.postValue(new WeatherState(null,
                                         result.message, result.state));

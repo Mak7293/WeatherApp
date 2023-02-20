@@ -52,7 +52,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class WeatherFragment extends Fragment {
 
     private FragmentWeatherBinding binding;
-
     public WeatherFragment() {
 
     }
@@ -70,11 +69,11 @@ public class WeatherFragment extends Fragment {
                         String permissionName = it.getKey();
                         boolean isGranted = it.getValue();
                         if(isGranted){
-                            if(Objects.equals(permissionName, Manifest.permission.ACCESS_FINE_LOCATION)){
+                            if(Objects.equals(permissionName, Manifest.permission.ACCESS_COARSE_LOCATION)){
                                 checkUpdateInStartOfApp();
                             }
                         }else {
-                            if(Objects.equals(permissionName, Manifest.permission.ACCESS_FINE_LOCATION)){
+                            if(Objects.equals(permissionName, Manifest.permission.ACCESS_COARSE_LOCATION)){
                                 Log.d("!!!!","");
                                 alertDialogForPermissionDenied();
                             }
@@ -84,7 +83,7 @@ public class WeatherFragment extends Fragment {
             });
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState){
         binding = FragmentWeatherBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
@@ -95,7 +94,6 @@ public class WeatherFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(WeatherViewModel.class);
         observeLiveData();
         permissionLauncher.launch(new String[]{
-                android.Manifest.permission.ACCESS_FINE_LOCATION,
                 android.Manifest.permission.ACCESS_COARSE_LOCATION
         });
         binding.tvGoToWeeklyForecast.setOnClickListener(new View.OnClickListener() {

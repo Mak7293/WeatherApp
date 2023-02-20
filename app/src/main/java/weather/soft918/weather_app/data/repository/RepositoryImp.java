@@ -59,7 +59,8 @@ public class RepositoryImp implements Repository {
                     if(call.isExecuted()){
                         call.cancel();
                         Resource<WeatherInfo> resource = new Resource.Error(
-                                null,"Server is too busy, please try again.",
+                                null,"Server is too busy, please try again." +
+                                " you can click on get latest forecast button.",
                                 WeatherUiState.ERROR_LONG_TIME_HTTP_REQUEST);
                         resultResource.put("resource",resource);
                         synchronized (processed) {

@@ -74,7 +74,6 @@ public class MaterialBottomSheet extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 dismiss();
-                backgroundExecutor.shutdown();
             }
         });
         binding.btnSaveToDatabase.setOnClickListener(new View.OnClickListener() {

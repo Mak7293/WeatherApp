@@ -16,7 +16,6 @@ import java.util.List;
 public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapter.ViewHolder> {
     private List<LocationEntity> list;
     private Context context;
-
     private SharedPreferences sharedPref;
     public View btnSetAsCurrentLocation;
     public View btnDeleteLocation;
@@ -49,14 +48,12 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
             btnSetAsCurrentLocation = binding.btnSetAsCurrentLocation;
         }
     }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(LocationRvItemBinding.inflate(
                 LayoutInflater.from(parent.getContext()), parent, false));
     }
-
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         LocationEntity location = list.get(position);

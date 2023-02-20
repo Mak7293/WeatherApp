@@ -1,10 +1,7 @@
 package weather.soft918.weather_app.data.location;
 
 
-
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -43,10 +40,6 @@ public class DefaultLocationTracker implements LocationTracker {
 
     @Override
     public HashMap<String,Double> getCurrentLocation() throws InterruptedException {
-        boolean hasAccessFineLocationPermission = ContextCompat.checkSelfPermission(
-                applicationContext,
-                ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED;
         boolean hasAccessCoarseLocationPermission = ContextCompat.checkSelfPermission(
                 applicationContext,
                 ACCESS_COARSE_LOCATION
@@ -56,13 +49,12 @@ public class DefaultLocationTracker implements LocationTracker {
                 Context.LOCATION_SERVICE);
         boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
                 locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        if(!hasAccessCoarseLocationPermission || !hasAccessFineLocationPermission
-                || !isGpsEnabled){
+        if(!hasAccessCoarseLocationPermission || !isGpsEnabled){
             return null;
         }
-        @SuppressLint("MissingPermission")
+        // if you take access_fine_location from user, and set Priority to High_Accuracy ,location task give you more precise and accurate location.
         Task<Location> locationTask = locationClient.getCurrentLocation(
-                Priority.PRIORITY_HIGH_ACCURACY, new CancellationToken(){
+                Priority.PRIORITY_BALANCED_POWER_ACCURACY, new CancellationToken(){
                     @NonNull
                     @Override
                     public CancellationToken onCanceledRequested(@NonNull OnTokenCanceledListener onTokenCanceledListener) {
@@ -73,8 +65,6 @@ public class DefaultLocationTracker implements LocationTracker {
                         return false;
                     }
                 });
-        /*CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-        Task<Location> locationTask = locationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, cancellationTokenSource.getToken());*/
         HashMap<String,Double> location = new HashMap<>();
         AtomicBoolean processed = new AtomicBoolean(true);
         locationTask.addOnSuccessListener(new OnSuccessListener() {

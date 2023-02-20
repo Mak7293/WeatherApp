@@ -37,9 +37,10 @@ public class LocationListFragment extends Fragment {
     @Inject
     SharedPreferences sharedPref;
 
-    private int lastLocation = -1;
+    private static int lastLocation = -1;
     public static int locationSize = 0;
-    LocationListAdapter adapter;
+    static LocationListAdapter adapter;
+    static List<LocationEntity> list = new ArrayList<>();
 
     public LocationListFragment(){
         // Required empty public constructor
@@ -86,7 +87,8 @@ public class LocationListFragment extends Fragment {
             @Override
             public void onChanged(List<LocationEntity> locationEntities) {
                 Log.d("location!!",locationEntities.toString());
-                setupLocationListRv(locationEntities);
+                list = locationEntities;
+                setupLocationListRv();
                 locationSize = locationEntities.size();
 
             }
@@ -101,7 +103,7 @@ public class LocationListFragment extends Fragment {
             }
         });
     }
-    private void setupLocationListRv(List<LocationEntity> list){
+    private void setupLocationListRv(){
         adapter = new LocationListAdapter(
                 list,requireContext(),sharedPref);
         binding.rvLocationList.setLayoutManager(new LinearLayoutManager(requireContext(),
@@ -148,6 +150,12 @@ public class LocationListFragment extends Fragment {
             }
         });
     }
+    public static void popCurrentRecyclerViewItem(){
+        if(list.size() != 0 ){
+            adapter.notifyItemChanged(lastLocation);
+        }
+
+    }
     private void showDialog(String header,String content, LocationEntity location){
         Dialog dialog = new Dialog(requireContext(), R.style.DialogTheme);
         DialogLayoutBinding dialogBinding = DialogLayoutBinding.inflate(getLayoutInflater());
@@ -163,7 +171,6 @@ public class LocationListFragment extends Fragment {
                         LocationListViewModel.LocationListEvent.DELETE_LOCATION,null,location);
                 dialog.dismiss();
             }
-
         });
         dialogBinding.btnNo.setOnClickListener(new View.OnClickListener() {
             @Override

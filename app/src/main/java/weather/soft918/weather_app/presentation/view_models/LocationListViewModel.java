@@ -106,7 +106,6 @@ public class LocationListViewModel extends ViewModel {
     public LiveData<List<LocationEntity>> getAllData(){
         return repository.getAllLocation();
     };
-
     @Override
     protected void onCleared() {
         super.onCleared();
