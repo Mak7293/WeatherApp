@@ -12,6 +12,7 @@ Second method: Add the desired city in the user's location list tab and set that
 | :-------- | :------- |
 |    📺    |      [Preview](https://github.com/Mak7293/WeatherApp/blob/master/README.md#preview)    |
 |     📱    |    [Compatibility](https://github.com/Mak7293/WeatherApp/blob/master/README.md#compatibility) |
+|    🎁    |   [Download](https://github.com/Mak7293/WeatherApp/blob/master/README.md#download) |
 |    📣    |   [Description](https://github.com/Mak7293/WeatherApp/blob/master/README.md#description) |
 |    💻    |  [Programing Feature](https://github.com/Mak7293/WeatherApp/blob/master/README.md#programing-feature) |
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -32,6 +33,10 @@ for More screen shot click [here](https://github.com/Mak7293/WeatherApp/tree/mas
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Compatibility 
 Minimum android version **SDK21+** or **Android 5.0+**.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Download
+- You can download this app from [CafeBazar](https://cafebazaar.ir/app/weather.soft918.weather_app?l=en).
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Description
