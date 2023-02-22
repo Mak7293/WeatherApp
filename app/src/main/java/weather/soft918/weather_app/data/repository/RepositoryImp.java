@@ -52,7 +52,7 @@ public class RepositoryImp implements Repository {
                 @Override
                 public void run() {
                     try {
-                        Thread.sleep(3500);
+                        Thread.sleep(4000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

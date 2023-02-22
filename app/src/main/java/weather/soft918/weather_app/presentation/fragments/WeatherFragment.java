@@ -116,7 +116,13 @@ public class WeatherFragment extends Fragment {
         binding.llGetUserLocaleLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getUserLocaleLocation();
+                if(sharedPref.getInt(Utility.CURRENT_LOCATION,Utility.LOCALE_LOCATION_ID) !=
+                        Utility.LOCALE_LOCATION_ID){
+                    getUserLocaleLocation();
+                }else {
+                    Toast.makeText(requireContext(), "Your location is already set to local location.",
+                            Toast.LENGTH_LONG).show();
+                }
             }
         });
 

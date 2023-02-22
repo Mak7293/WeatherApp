@@ -86,7 +86,11 @@ public class WeatherViewModel extends ViewModel {
                             Log.d("location", location.toString());
                         }
                         HashMap<String, Double> finalLocation = location;
-
+                        try {
+                            Thread.sleep(600);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                         if (finalLocation.get(Utility.LATITUDE) != null && finalLocation.get(Utility.LONGITUDE) != null) {
                             Resource<WeatherInfo> result = repository.getWeatherData(
                                     finalLocation.get(Utility.LATITUDE), finalLocation.get(Utility.LONGITUDE));
