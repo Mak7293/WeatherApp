@@ -20,7 +20,7 @@ public class Resource <T>{
             super(data,null, state);
         }
     }
-    public static class Error<T> extends Resource{
+    public static class Error<T> extends Resource {
         public Error(@Nullable T data,@Nullable String message, @Nullable WeatherUiState state) {
             super(data, message, state);
         }

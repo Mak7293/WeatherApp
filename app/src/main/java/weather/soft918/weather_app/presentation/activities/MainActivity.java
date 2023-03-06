@@ -23,6 +23,7 @@ import weather.soft918.weather_app.domin.adapters.ViewPagerAdapter;
 import weather.soft918.weather_app.databinding.ActivityMainBinding;
 import weather.soft918.weather_app.domin.util.Theme;
 import weather.soft918.weather_app.domin.util.Utility;
+import weather.soft918.weather_app.presentation.Events.Event;
 import weather.soft918.weather_app.presentation.fragments.LocationListFragment;
 import weather.soft918.weather_app.presentation.fragments.WeatherFragment;
 import weather.soft918.weather_app.presentation.view_models.WeatherViewModel;
@@ -155,8 +156,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("@@@",String.valueOf(viewModel.getCurrentLocationId()));
         int locationId = viewModel.getCurrentLocationId();
         if (locationId !=_locationId){
-            viewModel.loadWeatherInfo(locationId);
-            _locationId = locationId;
+            viewModel.weatherEvent(new Event.GetData<Integer>(locationId));
         }
     }
     private void setupViewPager(ViewPager viewPager){

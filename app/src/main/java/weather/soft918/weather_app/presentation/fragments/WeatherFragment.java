@@ -36,6 +36,7 @@ import weather.soft918.weather_app.domin.model.LocationEntity;
 import weather.soft918.weather_app.domin.util.TapTargetView;
 import weather.soft918.weather_app.domin.util.Utility;
 import weather.soft918.weather_app.domin.util.WeatherUiState;
+import weather.soft918.weather_app.presentation.Events.Event;
 import weather.soft918.weather_app.presentation.WeatherState;
 import weather.soft918.weather_app.presentation.activities.MainActivity;
 import weather.soft918.weather_app.presentation.view_models.WeatherViewModel;
@@ -100,7 +101,7 @@ public class WeatherFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(state.weatherInfo!=null){
-                    viewModel.weatherEvent(WeatherViewModel.WeatherEvent.DETAILS_FORECAST);
+                    viewModel.weatherEvent(new Event.DetailsForecast(null));
                 }else {
                     Toast.makeText(requireContext(), "no weather forecast available to show.", Toast.LENGTH_SHORT).show();
                 }
@@ -110,7 +111,8 @@ public class WeatherFragment extends Fragment {
         binding.llGetLatestData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewModel.weatherEvent(WeatherViewModel.WeatherEvent.GET_LATEST_DATA);
+                int locationId = viewModel.getCurrentLocationId();
+                viewModel.weatherEvent(new Event.GetData<Integer>(locationId));
             }
         });
         binding.llGetUserLocaleLocation.setOnClickListener(new View.OnClickListener() {
@@ -132,6 +134,7 @@ public class WeatherFragment extends Fragment {
         boolean isCashedAvailable = cash.first;
         WeatherState weatherState = cash.second;
         LocalDateTime now = LocalDateTime.now();
+        Log.d("!!!","!!!");
         if (isCashedAvailable){
             if(now.getDayOfYear() ==
                     weatherState.weatherInfo.currentWeatherData.time.getDayOfYear()){
@@ -139,14 +142,14 @@ public class WeatherFragment extends Fragment {
             }else {
                 if(viewModel.isFirstTime){
                     int locationId = viewModel.getCurrentLocationId();
-                    viewModel.loadWeatherInfo(locationId);
+                    viewModel.weatherEvent(new Event.GetData<Integer>(locationId));
                 }
                 viewModel.isFirstTime = false;
             }
         }else {
             if(viewModel.isFirstTime){
                 int locationId = viewModel.getCurrentLocationId();
-                viewModel.loadWeatherInfo(locationId);
+                viewModel.weatherEvent(new Event.GetData<Integer>(locationId));
             }
             viewModel.isFirstTime = false;
         }
@@ -314,7 +317,7 @@ public class WeatherFragment extends Fragment {
 
     }
     private void getUserLocaleLocation(){
-        viewModel.loadWeatherInfo(Utility.LOCALE_LOCATION_ID);
+        viewModel.weatherEvent(new Event.GetData<Integer>(Utility.LOCALE_LOCATION_ID));
     }
     private void setupWeatherUi(WeatherState weatherState){
         int locationId = viewModel.getCurrentLocationId();

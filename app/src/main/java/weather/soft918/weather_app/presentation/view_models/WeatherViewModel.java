@@ -24,6 +24,7 @@ import weather.soft918.weather_app.domin.util.Resource;
 import weather.soft918.weather_app.domin.util.Utility;
 import weather.soft918.weather_app.data.repository.weather.WeatherInfo;
 import weather.soft918.weather_app.domin.util.WeatherUiState;
+import weather.soft918.weather_app.presentation.Events.Event;
 import weather.soft918.weather_app.presentation.WeatherState;
 import weather.soft918.weather_app.presentation.activities.MainActivity;
 import weather.soft918.weather_app.presentation.activities.StatisticsActivity;
@@ -48,10 +49,7 @@ public class WeatherViewModel extends ViewModel {
             new WeatherState(null,null,WeatherUiState.NULL));
     private final ScheduledExecutorService backgroundExecutor =
             Executors.newSingleThreadScheduledExecutor();
-    public enum WeatherEvent {
-        GET_LATEST_DATA,
-        DETAILS_FORECAST
-    }
+
     @Inject
     public WeatherViewModel(
             Repository repository,
@@ -172,19 +170,13 @@ public class WeatherViewModel extends ViewModel {
             return new Pair<>(false, null);
         }
     }
-    public void weatherEvent(WeatherEvent event){
-        switch (event){
-            case DETAILS_FORECAST: {
-                Intent intent = new Intent(applicationContext, StatisticsActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                applicationContext.startActivity(intent);
-                break;
-            }
-            case GET_LATEST_DATA: {
-                int locationId = getCurrentLocationId();
-                loadWeatherInfo(locationId);
-                break;
-            }
+    public void weatherEvent(Event<Object> event){
+        if (event instanceof Event.DetailsForecast) {
+            Intent intent = new Intent(applicationContext, StatisticsActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            applicationContext.startActivity(intent);
+        } else if (event instanceof Event.GetData) {
+            loadWeatherInfo((Integer) event.data);
         }
     }
     private boolean isLocationEnabled(){
