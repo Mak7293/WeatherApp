@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,6 +19,7 @@ import weather.soft918.weather_app.databinding.DialogLayoutBinding;
 import weather.soft918.weather_app.databinding.FragmentLocationListBinding;
 import weather.soft918.weather_app.domin.adapters.LocationListAdapter;
 import weather.soft918.weather_app.domin.model.LocationEntity;
+import weather.soft918.weather_app.domin.util.MaterialBottomSheet;
 import weather.soft918.weather_app.domin.util.TapTargetView;
 import weather.soft918.weather_app.domin.util.Utility;
 import weather.soft918.weather_app.presentation.activities.MainActivity;
@@ -61,11 +63,14 @@ public class LocationListFragment extends Fragment {
         binding.fabAddLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewModel.locationListEvent(
-                        LocationListViewModel.LocationListEvent.SHOW_BOTTOM_SHEET,requireActivity(),null);
+                showBottomSheet();
             }
         });
         observeLiveData();
+    }
+    private void showBottomSheet(){
+        MaterialBottomSheet modalBottomSheet = new MaterialBottomSheet();
+        modalBottomSheet.show(getActivity().getSupportFragmentManager(), MaterialBottomSheet.TAG);
     }
     public void locationFragmentTapTargetView(){
         if(locationSize == 0){
@@ -142,7 +147,7 @@ public class LocationListFragment extends Fragment {
                     }
                 }
                 viewModel.locationListEvent(
-                        LocationListViewModel.LocationListEvent.SET_AS_CURRENT_LOCATION,null,location);
+                        LocationListViewModel.LocationListEvent.SET_AS_CURRENT_LOCATION,location);
                 adapter.notifyItemChanged(position);
                 adapter.notifyItemChanged(lastLocation);
                 lastLocation = position;
@@ -168,7 +173,7 @@ public class LocationListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 viewModel.locationListEvent(
-                        LocationListViewModel.LocationListEvent.DELETE_LOCATION,null,location);
+                        LocationListViewModel.LocationListEvent.DELETE_LOCATION,location);
                 dialog.dismiss();
             }
         });

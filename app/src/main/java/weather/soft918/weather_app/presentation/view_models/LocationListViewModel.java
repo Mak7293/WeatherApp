@@ -46,15 +46,9 @@ public class LocationListViewModel extends ViewModel {
     }
     public void locationListEvent(
             LocationListEvent event,
-            @Nullable FragmentActivity activity,
             @Nullable LocationEntity location
     ){
         switch (event){
-            case SHOW_BOTTOM_SHEET: {
-                showBottomSheet(activity);
-                //Log.d("size" , repository.getAllLocation().toString());
-                break;
-            }
             case SAVE_LOCATION: {
                 saveLocationToDatabase(location);
                 break;
@@ -69,10 +63,7 @@ public class LocationListViewModel extends ViewModel {
             }
         }
     }
-    private void showBottomSheet(FragmentActivity activity){
-        MaterialBottomSheet modalBottomSheet = new MaterialBottomSheet();
-        modalBottomSheet.show(activity.getSupportFragmentManager(), MaterialBottomSheet.TAG);
-    }
+
     private void saveLocationToDatabase(LocationEntity location){
         Executor mainExecutor = ContextCompat.getMainExecutor(applicationContext);
         backgroundExecutor.execute(new Runnable() {

@@ -96,7 +96,7 @@ public class MaterialBottomSheet extends BottomSheetDialogFragment {
                                 address.get(0).getLongitude()
                         );
                         viewModel.locationListEvent(
-                                LocationListViewModel.LocationListEvent.SAVE_LOCATION,null,location);
+                                LocationListViewModel.LocationListEvent.SAVE_LOCATION,location);
                         dismiss();
                     }else {
                         alertDialogForMoreThan150EntriesInDatabase();
